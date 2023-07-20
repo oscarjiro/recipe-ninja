@@ -1,0 +1,322 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Recipe Ninja</title>
+        <link rel="stylesheet" href="{% static 'recipeninja/styles.css' %}?{% now 'U' %}">
+        <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="{% static 'recipeninja/scripts/navbar.js' %}?{% now 'U' %}"></script>
+        {% block script %}{% endblock %}
+        <style type="text/tailwindcss">
+
+            :root {
+                --black: #161618;
+                --white: #ececec;
+                --red: #d0312d;
+                --blue: rgb(8, 160, 233);
+            }
+            
+            
+            @layer components {
+                /* GENERAL */
+                body {
+                    @apply tracking-tight text-[var(--black)] selection:bg-[var(--black)] selection:text-[var(--white)] select-none;
+                }
+
+                .glow {
+                    @apply drop-shadow-[0_0_5px_rgba(239,239,239,0.7)];
+                }
+
+                .smooth {
+                    @apply ease-in-out duration-200 transition-all;
+                }
+
+                .text-fade {
+                    @apply bg-gradient-to-tr from-[var(--white)] from-50% text-transparent bg-clip-text;
+                }
+
+                .mesh-gradient {
+                    background-color: rgb(253, 164, 175);
+                    background-image: radial-gradient(at 79% 77%, rgb(91, 33, 182) 0, transparent 26%), radial-gradient(at 35% 44%, rgb(30, 58, 138) 0, transparent 76%), radial-gradient(at 75% 14%, rgb(254, 249, 195) 0, transparent 70%), radial-gradient(at 72% 33%, rgb(64, 64, 64) 0, transparent 18%), radial-gradient(at 43% 23%, rgb(55, 48, 163) 0, transparent 31%), radial-gradient(at 84% 88%, rgb(157, 23, 77) 0, transparent 98%);
+                    opacity: 0.6;
+                }
+
+
+                /* TEXT */
+                .logo {
+                    @apply text-4xl -tracking-[1px] font-[900];
+                }
+
+                .heading {
+                    @apply text-xl min-[340px]:text-2xl md:text-3xl -tracking-[1px];
+                }
+
+                .link {
+                    @apply text-[var(--blue)] smooth hover:text-[rgb(8,160,233)]/60;
+                }
+
+                .text-invalid {
+                    @apply text-[var(--red)] font-[500] text-lg;
+                }
+
+
+                /* NAVBAR */
+                .navbar {
+                    @apply fixed top-0 p-4 px-8 z-[99] flex items-center
+                            h-[80px] flex-row justify-between w-screen backdrop-blur-md bg-[#ececec]/70;
+                }
+
+                .nav-item {
+                    @apply text-xl font-[500] smooth hover:opacity-70;
+                }
+
+
+                /* SIDEBAR */
+                #expandSidebarButton, #collapseSidebarButton1, #collapseSidebarButton2 {
+                    @apply cursor-pointer;
+                }
+
+                #sidebarContent {
+                    @apply smooth duration-1000;
+                }
+
+                #sidebarContent div {
+                    @apply smooth duration-500;
+                }
+
+                .sidebar-item {
+                    @apply text-2xl sm:text-lg hover:glow smooth
+                            selection:bg-[var(--white)] selection:text-[var(--black)];
+                }
+
+                .sidebar-content {
+                    @apply z-[-999] fixed overflow-hidden top-0 right-0 bg-[var(--black)] h-screen text-[var(--white)] p-5 
+                            w-[0px] w-screen flex flex-col items-center space-y-16
+                            sm:w-[0px] sm:max-w-[300px] sm:flex-row sm:items-start sm:justify-between sm:space-y-0
+                            min-[1100px]:hidden;
+                }
+
+
+                /* INPUT */
+                .input {
+                    @apply w-full border border-[var(--black)] rounded-lg bg-transparent p-2 font-[500]
+                            smooth focus:outline-0 focus:ring-[var(--black)] focus:ring-1
+                            placeholder:font-normal;
+                }
+
+                .button {
+                    @apply w-full rounded-lg bg-[var(--black)] text-[var(--white)] p-2
+                            smooth hover:bg-[#121212]/80;
+                }
+
+
+                /* EXPLORE */
+                .cuisine-filter-button-unselected {
+                    @apply text-lg rounded-lg p-2 border border-[var(--black)] bg-transparent text-[var(--black)] smooth hover:bg-[var(--black)] hover:text-[var(--white)] w-[120px];
+                }
+
+                .cuisine-filter-button-selected {
+                    @apply cuisine-filter-button-unselected bg-[var(--black)] text-[var(--white)] hover:bg-[#121212]/80;
+                }
+
+
+                /* CREATE RECIPE FORM */
+                .recipe-form-input {
+                    @apply w-full bg-transparent p-2 border-b border-[var(--black)] focus:outline-none;
+                }
+
+                .recipe-form-textarea {
+                    @apply w-full bg-transparent border border-[var(--black)] rounded-lg resize-none p-2 focus:outline-none;
+                }
+
+                .recipe-bullet-point {
+                    @apply text-xs font-[900] rounded-full aspect-square w-[25px] bg-[var(--black)] text-[var(--white)] flex justify-center items-center overflow-hidden;
+                }
+
+                select[multiple] option:checked {
+                    background-color: var(--black);
+                    color: var(--white); 
+                }
+
+
+                /* EXPLORE */
+                .recipe-carousel {
+                    @apply order-3 grid overflow-y-scroll h-full smooth duration-500 gap-4 
+                            min-[900px]:grid-cols-3 
+                            min-[600px]:grid-cols-2
+                            grid-cols-1;
+                }
+
+                .recipe-container {
+                    @apply flex flex-col space-y-2 overflow-hidden rounded-lg w-full h-[300px] smooth hover:scale-105 cursor-pointer p-4;
+                }
+
+                .recipe-container-image {
+                    @apply w-full h-[200px] rounded-md object-cover overflow-hidden flex justify-center items-center font-bold bg-[#121212]/80 text-[var(--white)] text-xs;
+                }
+
+                
+                /* RECIPE PAGE */
+                
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <!-- Background -->
+        <div class="z-[-100] fixed top-0 w-screen h-screen bg-[var(--white)]">
+            <!-- <div class="mesh-gradient w-full h-full"></div> -->
+        </div>
+
+        <!-- Navbar -->
+        <nav class="navbar" id="navbar">
+            <!-- Logo -->
+            <a href="{% url 'index' %}" class="flex items-center space-x-3 hover:text-transparent hover:bg-gradient-to-br hover:from-[var(--black)] hover:from-50% hover:bg-clip-text hover:smooth">
+                <img 
+                    src="{% static 'recipeninja/logo.svg' %}" 
+                    alt="RecipeNinja Logo" 
+                    class="w-[45px] h-[45px] aspect-square [-webkit-filter:invert(10%)]"
+                >
+                <div class="logo pb-[5px] hidden min-[375px]:block">
+                    RecipeNinja
+                </div>
+            </a>
+            
+            <!-- Navbar items -->
+            <div class="hidden min-[1100px]:flex space-x-12 items-center">
+                <a class="nav-item" href="{% url 'index' %}">
+                    Home
+                </a>
+                <a class="nav-item" href="{% url 'explore' %}">
+                    Explore
+                </a>
+                {% if user.is_authenticated %}
+                    <a class="nav-item">
+                        My Feed
+                    </a>
+                    <a href="{% url 'create_recipe' %}" class="nav-item">
+                        Create Recipe
+                    </a>
+                    <a class="nav-item">
+                        Saved Recipes
+                    </a>
+                    <div class="relative">
+                        <div id="profilePicture" class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth">
+                            {% if user.profile_picture %}
+                                <img 
+                                    src="{{ user.profile_picture.url }}" 
+                                    alt="{{ user.username }} Profile Picture"
+                                    class="object-cover"    
+                                >
+                            {% else %}
+                                <div class="flex items-center justify-center group w-full h-full">
+                                    <div class="text-fade font-[900] group-hover:glow smooth">{{ user.username|capfirst|slice:"1" }}</div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div id="profilePictureDropdown" class="h-0 opacity-0 smooth duration-1000 rounded-xl w-[85px] bg-[var(--black)] absolute top-[55px] -right-[15px] space-y-2 p-3">
+                            <div class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden">
+                                <a href="{% url 'index' %}">Profile</a>
+                            </div>
+                            <hr class="border-[#ececec]/50 glow">
+                            <div class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden">
+                                <a href="{% url 'logout' %}">Log Out</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a class="nav-item" href="{% url 'login' %}">
+                        Login
+                    </a>
+                    <a class="nav-item" href="{% url 'register' %}">
+                        Register
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Expand sidebar button -->
+            <div class="min-[1100px]:hidden" id="expandSidebarButton">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
+                </svg>                                           
+            </div>
+        </nav>
+
+        <!-- Sidebar content -->
+        <div id="sidebarContent" class="sidebar-content">
+            <!-- Close sidebar button 1 -->
+            <div id="collapseSidebarButton1" class="opacity-0 hidden sm:block">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>                  
+            </div>
+            
+            <!-- Sidebar items -->
+            <div class="flex flex-col space-y-3 items-center sm:items-end opacity-0">
+                {% if user.is_authenticated %}
+                    <div id="profilePicture" class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] border border-[#ececec]/50 overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth">
+                        {% if user.profile_picture %}
+                            <img 
+                                src="{{ user.profile_picture.url }}" 
+                                alt="{{ user.username }} Profile Picture"
+                                class="object-cover"    
+                            >
+                        {% else %}
+                            <div class="flex items-center justify-center group w-full h-full">
+                                <div class="text-fade font-[900] group-hover:glow smooth">{{ user.username|capfirst|slice:"1" }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <a class="sidebar-item" href="{% url 'index' %}">
+                    Home
+                </a>
+                <a class="sidebar-item" href="{% url 'explore' %}">
+                    Explore
+                </a>
+                {% if user.is_authenticated %}
+                    <a class="sidebar-item">
+                        My Feed
+                    </a>    
+                    <a href="{% url 'create_recipe' %}" class="sidebar-item">
+                        Create Recipe
+                    </a>
+                    <a class="sidebar-item">
+                        Saved Recipes
+                    </a>
+                    <a class="sidebar-item" href="{% url 'logout' %}">
+                        Log Out
+                    </a>
+                {% else %}
+                    <a class="sidebar-item" href="{% url 'login' %}">
+                        Login
+                    </a>
+                    <a class="sidebar-item" href="{% url 'register' %}">
+                        Register
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- Close sidebar button 2 -->
+            <div id="collapseSidebarButton2" class="opacity-0 sm:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>                  
+            </div>
+        </div>
+
+        <!-- Body -->
+        <main class="mt-[80px] p-4 px-8" id="content">
+            {% block body %}
+            {% endblock %}
+        </main>
+
+    </body>
+</html>

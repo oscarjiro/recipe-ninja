@@ -1,0 +1,47 @@
+{% extends "recipeninja/layout.html" %}
+
+
+{% block body %}
+
+    <div class="flex flex-col justify-center items-center w-full text-center">
+
+        <!-- Title -->
+        <div class="heading mb-3 font-semibold">
+            Register
+        </div>
+
+        <!-- Form -->
+        <form action="{% url 'register' %}" method="post" autocomplete="off" class="space-y-2 w-full max-w-[500px]">
+            {% csrf_token %}
+            <div class="flex space-x-2">
+                {{ register_form.first_name }}
+                {{ register_form.last_name }}
+            </div>
+            {{ register_form.username }}
+            {{ register_form.email }}
+            {{ register_form.password }}
+            {{ register_form.confirm_password }}
+            <button class="button" type="submit">Register</button>
+        </form>
+
+        <!-- Error message -->
+        {% if message %}
+            <div class="text-invalid mt-3 mb-3">
+                {{ message }}
+            </div>
+        {% endif %}
+        {% if register_form.errors %}
+            <div class="text-invalid mt-3 mb-3">
+                {{ register_form.errors }}
+            </div>
+        {% endif %}
+
+        <!-- Redirect to Login -->
+        <div class="text-sm min-[340px]:text-base mt-4"">
+            Already got an account? 
+            <a href="{% url 'login' %}" class="link">Login</a> instead!
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,346 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+    <div class="w-full flex flex-col justify-center items-center">
+
+        <!-- Title -->
+        <div class="w-full max-w-[1000px] heading font-[500] mb-8">
+            Share your recipe to the world!
+        </div>
+
+        <!-- Form -->
+        <form id="createRecipeForm" action="{% url 'create_recipe' %}" method="post" enctype="multipart/form-data" class="w-full max-w-[1000px] flex flex-col space-y-8">
+            <!-- Recipe Name -->
+            <div class="flex flex-col space-y-2">
+                <div id="nameHeader" class="flex flex-col">
+                    <div class="text-lg font-[500]">Recipe Name<span class="text-invalid">*</span></div>
+                    <div class="text-xs italic">
+                        Provide a name for your recipe.
+                    </div>
+                </div>
+                {% if errors.name %}
+                    <div id="nameErrorMessage" class="text-invalid text-sm">
+                        {{ errors.name }}
+                    </div>
+                {% endif %}
+                <input 
+                    id="recipeNameInput"
+                    type="text" 
+                    name="name"
+                    spellcheck="false"
+                    autocomplete="off"
+                    class="recipe-form-input"
+                >
+            </div>
+
+            <!-- Image -->
+            <div class="flex flex-col space-y-3">
+                <div id="imageHeader" class="flex flex-col">
+                    <div class="text-lg font-[500]">Image</div>
+                    <div class="text-xs italic">
+                        Optionally provide an image of your recipe. 
+                    </div>
+                </div>
+                {% if errors.image %}
+                    <div id="imageErrorMessage" class="text-invalid text-sm">
+                        {{ errors.image }}
+                    </div>
+                {% endif %}
+                <div class="relative overflow-hidden rounded-xl w-full h-[350px] flex justify-center items-center text-xs bg-[#121212]/80 text-[var(--white)] font-bold">
+                    No image provided.
+                    <img 
+                        id="previewImage"
+                        src="" 
+                        class="hidden absolute object-cover w-full h-full overflow-hidden"
+                    />
+                </div>
+                <div class="flex flex-col space-y-2 items-center justify-center" id="uploadButton">
+                    <button 
+                        class="rounded-md p-1 bg-transparent border border-[var(--black)]
+                                smooth hover:bg-[var(--black)] hover:text-[var(--white)] 
+                                relative text-sm w-full sm:w-[50%] overflow-hidden flex justify-center items-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.2" stroke="currentColor" class="w-4 h-4 mr-2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
+                        </svg>     
+                        Upload image
+                        <input 
+                            id="imageInput"
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            class="absolute scale-[6] right-[206px] opacity-0 cursor-pointer"
+                        >
+                    </button>
+                    <div id="imageName" class="text-xs hidden"></div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="flex flex-col space-y-2">
+                <div id="descriptionHeader" class="flex flex-col">
+                    <div class="text-lg font-[500]">Description</div>
+                    <div class="text-xs italic">
+                        Optionally provide a short description of your recipe. The maximum is 150 characters.
+                    </div>
+                </div>
+                {% if description %}
+                    <div id="descriptionErrorMessage" class="text-invalid text-sm">
+                        {{ description }}
+                    </div>
+                {% endif %}
+                <textarea 
+                    id="descriptionInput"
+                    name="description" 
+                    rows="2"
+                    class="recipe-form-textarea"
+                    maxlength="{{ MAX_DESCRIPTION_LENGTH }}"
+                    spellcheck="false"
+                ></textarea>
+            </div>
+
+            <!-- Ingredients -->
+            <div class="space-y-1">
+                <div id="ingredientsHeader" class="flex flex-col">
+                    <div class="flex items-center space-x-2">
+                        <div class="text-lg font-[500]">Ingredients<span class="text-invalid">*</span></div>
+                        <svg id="addIngredientButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 cursor-pointer">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </div>
+                    <div class="text-xs italic">
+                        You must include at least 1 ingredient. The maximum limit is 30 ingredients.
+                    </div>
+                </div>
+                {% if errors.ingredients %}
+                    <div id="ingredientErrorMessage" class="text-invalid text-sm">
+                        {{ errors.ingredients }}
+                    </div>
+                {% endif %}
+                <div id="recipeIngredientsCarousel" class="flex flex-col">
+                    <div id="ingredient1Container" class="flex items-center space-x-2">
+                        <div class="recipe-bullet-point">1</div>
+                        <input 
+                            id="ingredient1"
+                            name="ingredient1"
+                            type="text"
+                            class="recipe-form-input"
+                            autocomplete="off"
+                            spellcheck="false"
+                        > 
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="space-y-1">
+                <div id="instructionHeader" class="flex flex-col">
+                    <div class="flex items-center space-x-2">
+                        <div class="text-lg font-[500]">Instructions<span class="text-invalid">*</span></div>
+                        <svg id="addInstructionButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 cursor-pointer">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                        </svg>
+                    </div>
+                    <div class="text-xs italic">
+                        You must include at least 1 instruction. The maximum limit is 15 instructions.
+                    </div>
+                </div>
+                {% if errors.instructions %}
+                    <div id="instructionErrorMessage" class="text-invalid text-sm">
+                        {{ errors.instructions }}
+                    </div>
+                {% endif %}
+                <div id="recipeInstructionsCarousel" class="flex flex-col">
+                    <div id="instruction1Container" class="flex items-center space-x-2">
+                        <div class="recipe-bullet-point">1</div>
+                        <input 
+                            id="instruction1"
+                            name="instruction1"
+                            type="text"
+                            class="recipe-form-input"
+                            autocomplete="off"
+                            spellcheck="false"
+                        > 
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full flex flex-col space-y-8 min-[1010px]:space-y-0 min-[1010px]:flex-row min-[1010px]:space-x-20 items-center">
+                <!-- Duration -->
+                <div class="flex flex-col space-y-2 w-full min-[1010px]:w-[60%]">
+                    <div id="durationHeader" class="flex flex-col">
+                        <div class="text-lg font-[500]">Estimated Duration <i class="font-normal">(min)</i><span class="text-invalid">*</span></div>
+                        <div class="text-xs italic">
+                            Provide an estimated duration to make the recipe in minutes.
+                        </div>
+                    </div>
+                    {% if errors.duration %}
+                        <div id="durationErrorMessage" class="text-invalid text-sm">
+                            {{ errors.duration }}
+                        </div>
+                    {% endif %}
+                    <div class="flex items-center justify-center space-x-4">
+                        <input 
+                            id="durationInput"
+                            type="number" 
+                            min="1"
+                            name="duration"
+                            spellcheck="false"
+                            autocomplete="off"
+                            class="recipe-form-input"
+                        >
+                        <div class="font-[500]">min</div>
+                    </div>
+                </div>
+
+                <!-- Nutrition -->
+                <div class="flex flex-col space-y-2 w-full">
+                    <div id="nutritionHeader" class="flex flex-col">
+                        <div class="text-lg font-[500]">Estimated Basic Nutrition</div>
+                        <div class="text-xs italic">
+                            Optionally provide an estimated number of carbohydrates, proteins, and fats in grams.
+                        </div>
+                    </div>
+                    {% if errors.nutrition %}
+                        <div id="nutritionErrorMessage" class="text-invalid text-sm">
+                            {{ errors.nutrition }}
+                        </div>
+                    {% endif %}
+                    <div class="flex flex-col sm:flex-row md:space-x-12">
+                        <div class="flex items-center space-x-3 w-full">
+                            <input 
+                                id="carbsInput"
+                                type="number" 
+                                min="1"
+                                name="carbs"
+                                spellcheck="false"
+                                autocomplete="off"
+                                class="recipe-form-input"
+                                placeholder="Carbs"
+                            >
+                            <div class="font-[500]">g</div>
+                        </div>
+                        <div class="flex items-center space-x-3 w-full">
+                            <input 
+                                id="proteinInput"
+                                type="number" 
+                                min="1"
+                                name="protein"
+                                spellcheck="false"
+                                autocomplete="off"
+                                class="recipe-form-input"
+                                placeholder="Protein"
+                            >
+                            <div class="font-[500]">g</div>
+                        </div>
+                        <div class="flex items-center space-x-3 w-full">
+                            <input 
+                                id="fatInput"
+                                type="number" 
+                                min="1"
+                                name="fat"
+                                spellcheck="false"
+                                autocomplete="off"
+                                class="recipe-form-input"
+                                placeholder="Fat"
+                            >
+                            <div class="font-[500]">g</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full flex flex-col space-y-8 min-[1010px]:space-y-0 min-[1010px]:flex-row min-[1010px]:space-x-12 items-center">
+
+                <!-- Difficulty -->
+                <div class="flex flex-col space-y-2 w-full min-[1010px]:w-1/2">
+                    <div id="difficultyHeader" class="flex flex-col">
+                        <div class="text-lg font-[500]">Difficulty<span class="text-invalid">*</span></div>
+                        <div class="text-xs italic">
+                            Select the difficulty of making your recipe.
+                        </div>
+                    </div>
+                    {% if errors.difficulty %}
+                        <div id="difficultyErrorMessage" class="text-invalid text-sm">
+                            {{ errors.difficulty }}
+                        </div>
+                    {% endif %}
+                    <!--   
+                        <select name="difficulty" id="difficultyInput" class="bg-[transparent] focus:outline-0">
+                            {% for difficulty in difficulties %}
+                                <option value="{{ difficulty }}">{{ difficulty }}</option>
+                            {% endfor %}
+                        </select>
+                    -->
+                    <div class="min-[1010px]:h-[50px] min-[1010px]:overflow-hidden">
+                        <div 
+                            class="grid grid-cols-1 min-[300px]:grid-cols-2 gap-2
+                                    min-[500px]:flex min-[500px]:space-x-1
+                                    min-[1010px]:grid min-[1010px]:space-x-0 min-[1010px]:grid-cols-{{ difficulties.count }} min-[1010px]:gap-[50px] min-[1010px]:overflow-y-auto min-[1010px]:pb-[50px]"
+                        >
+                            {% for difficulty in difficulties %}
+                                <button id="difficulty{{ difficulty.name }}" class="cuisine-filter-button-unselected text-base max-[1010px]:w-full" type="button">
+                                    {{ difficulty.name }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- Cuisine -->
+                <div class="flex flex-col space-y-2 w-full min-[1010px]:w-1/2">
+                    <div id="cuisineHeader" class="flex flex-col">
+                        <div class="text-lg font-[500]">Cuisines</div>
+                        <div class="text-xs italic">
+                            Optionally select one or more cuisines that best fit your recipe.
+                        </div>
+                    </div>
+                    {% if errors.cuisine %}
+                        <div id="cuisineErrorMessage" class="text-invalid text-sm">
+                            {{ errors.cuisine }}
+                        </div>
+                    {% endif %}
+                    <!--
+                        <select name="cuisine" id="cuisineInput" multiple class="bg-transparent focus:outline-0">
+                            {% for cuisine in cuisines %}
+                                <option value="{{ cuisine }}">{{ cuisine }}</option>
+                            {% endfor %}
+                        </select>
+                    -->
+                    <div class="min-[1010px]:h-[50px] min-[1010px]:overflow-hidden">
+                        <div 
+                            class="grid min-[280px]:grid-cols-2 min-[370px]:grid-cols-3 gap-2
+                                    min-[1010px]:grid-cols-{{ cuisines.count }} min-[1010px]:gap-[125px] min-[1010px]:overflow-y-auto min-[1010px]:pb-[50px]"
+                        >
+                            {% for cuisine in cuisines %}
+                                <button id="cuisine{{ cuisine.name }}" class="cuisine-filter-button-unselected text-base max-[1010px]:w-full" type="button">
+                                    {{ cuisine.name }}
+                                </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Submit Button -->
+            <button id="createRecipeButton" class="button" type="submit">
+                Create Recipe
+            </button>
+
+            {% csrf_token %} 
+        </form>
+
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/create.js' %}?{% now 'U' %}"></script>
+
+{% endblock %}

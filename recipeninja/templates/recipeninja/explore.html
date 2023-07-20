@@ -1,0 +1,62 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+    <!-- Searchbar Text -->
+    <div class="mb-6">
+        <div class="heading font-[500]">
+            Finding recipes have never been quicker and simpler.
+        </div>
+    </div>
+
+    <!-- Layout -->
+    <div  id="mainLayout" class="flex flex-col min-[1100px]:flex-row w-[calc(100vw-4rem)] fixed overflow-y-auto overflow-x-hidden h-[calc(100vh-2rem-160px)] smooth duration-[500ms] opacity-0">
+        <!-- Cuisine filters -->
+        <div class="order-2 min-[1100px]:w-[150px] min-[1100px]:order-1 overflow-hidden h-full max-h-[50px] min-[1100px]:max-h-none mb-2 min-[1100px]:mb-auto">
+            <div 
+                id="cuisineFilters" 
+                class="grid w-full 
+                        grid-cols-9 gap-[130px] overflow-x-scroll pb-[10px]
+                        min-[1100px]:grid-cols-none min-[1100px]:gap-4 min-[1100px]:overflow-x-hidden min-[1100px]:overflow-y-auto min-[1100px]:max-w-none min-[1100px]:pb-auto"
+            >
+            </div>
+        </div>
+
+        <!-- Searchbar -->
+        <div id="searchbar" class="order-1 flex items-center border border-[#121212] rounded-lg px-3 group w-full mb-3">
+            <!-- Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 smooth group-focus-within:animate-bounce">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>    
+    
+            <!-- Input field -->
+            <input 
+                id="recipeSearchBar" 
+                type="text"
+                placeholder="Search for your favorite recipes!"
+                autocomplete="off"
+                spellcheck="false"
+                class="input border-none p-3 focus:ring-0 md:text-lg"
+            >
+        </div>
+    
+        <!-- Recipe Carousel -->
+        <div id="recipeCarousel" class="order-3 text-2xl font-[500] w-full h-full flex justify-center items-center">
+            No results.
+        </div>
+
+        <!-- Inner Layout -->
+        <div id="innerLayout" class="flex flex-col order-1 min-[1100px]:order-2 w-full">
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/explore.js' %}?{% now 'U' %}" type="module"></script>
+
+{% endblock %}

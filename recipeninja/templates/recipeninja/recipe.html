@@ -1,0 +1,188 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+    {% if recipe %}
+    
+        <div class="flex w-full space-x-8 h-[calc(100vh-160px)] overflow-hidden">
+
+            <!-- Left -->
+            <div class="w-[60%] flex flex-col">
+                <!-- Image -->
+                <div class="h-[calc((100vh-160px)/2)] overflow-hidden rounded-2xl mb-3">
+                    <img 
+                        src="{{ recipe.image.url }}" 
+                        alt=""
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+
+                <!-- Recipe Name -->
+                <div id="name" class="text-6xl top-[30px] text-[var(--black)] font-[900] w-full line-clamp-2">
+                    {{ recipe.name }}
+                </div>
+
+                <!-- Poster -->
+                <div class="text-2xl font-[400] mb-8">
+                    by <a href="" class="link font-bold">{{ recipe.poster }}</a>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <!-- Details -->
+                    <div class="w-full flex space-x-20 items-center">
+                        <!-- Duration -->
+                        <div class="flex flex-col items-center">
+                            <div class="text-lg tracking-wider">
+                                COOK
+                            </div>
+                            <div class="text-3xl font-[500]">
+                                {{ recipe.est_duration }} min
+                            </div>
+                        </div>
+    
+                        <!-- Difficulty -->
+                        <div class="flex flex-col items-center">
+                            <div class="text-lg tracking-wider">
+                                DIFFICULTY
+                            </div>
+                            <div class="text-3xl font-[500]">
+                                {{ recipe.difficulty }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nutrition -->
+                    <div class="flex space-x-8 px-8 py-2 border border-[var(--black)] rounded-xl">
+                        <!-- Calories -->
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="text-4xl font-[500]">
+                                {% if calories %}
+                                    {{ calories }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
+                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                                CALS
+                            </div>
+                        </div>
+
+                        <!-- Carbs -->
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="text-4xl font-[500]">
+                                {% if recipe.est_carbs %}
+                                    {{ recipe.est_carbs }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
+                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                                CARB
+                            </div>
+                        </div>
+
+                        <!-- Protein -->
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="text-4xl font-[500]">
+                                {% if recipe.est_protein %}
+                                    {{ recipe.est_protein }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
+                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                                PROT
+                            </div>
+                        </div>
+
+                        <!-- Fat -->
+                        <div class="flex flex-col justify-center items-center">
+                            <div class="text-4xl font-[500]">
+                                {% if recipe.est_fat %}
+                                    {{ recipe.est_fat }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </div>
+                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                                FAT
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Icons -->
+            </div>
+
+            <!-- Right -->
+            <div class="relative w-[40%] h-full bg-[#121212]/10 rounded-xl p-5 overflow-hidden">
+                <!-- Section -->
+                <div class="z-[-1] w-full h-full flex flex-col space-y-8 px-5 py-3">
+
+                    <!-- Title -->
+                    <div id="sectionTitle" class="text-5xl font-[500] uppercase tracking-widest">
+                        Ingredients
+                    </div>
+
+                    <!-- Content -->
+                    <div id="sectionContent" class="h-full overflow-y-auto text-2xl">
+                        <div class="mb-3">
+                            There are {{ recipe.ingredients|length }} ingredients in this recipe.
+                        </div>
+                        <ul class="font-[500] pl-8 list-disc list-inside marker:link">
+                            {% for ingredient in recipe.ingredients  %}
+                                <li>{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Mini navbar -->
+                <div class="z-[1] absolute w-full h-[80px] bottom-0 left-0 bg-gradient-to-t from-[#c2c2c2] from-70% p-5 flex items-center justify-center">
+                    <div class="w-full h-[50px] bg-[var(--black)] rounded-full flex items-center px-20 justify-between">
+                        <!-- Ingredient s-->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer text-[var(--white)]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                        </svg>
+    
+                        <!-- Instructions -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer text-[var(--white)]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                        </svg>
+    
+                        <!-- Reviews -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer text-[var(--white)]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
+                        </svg>                      
+    
+                        <!-- Share -->
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor-pointer text-[var(--white)]">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+
+    {% else %}
+
+        <div class="heading text-invalid">
+            Recipe does not exist.
+        </div>
+
+    {% endif %}
+
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/recipe.js' %}?{% now 'U' %}"></script>
+
+{% endblock %}
