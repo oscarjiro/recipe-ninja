@@ -8,6 +8,7 @@ import json
 class User(AbstractUser):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to="recipeninja/images/profile_pictures", blank=True, null=True)
+    banner = models.ImageField(upload_to="recipeninja/images/banner", blank=True, null=True)
     
     def serialize(self):
         return {
@@ -18,6 +19,7 @@ class User(AbstractUser):
             "is_staff": self.is_staff,
             "bio": self.bio,
             "profile_picture": self.profile_picture.url if self.profile_picture else None,
+            "banner": self.banner.url if self.banner else None,
         }
         
     def __str__(self):
@@ -78,8 +80,11 @@ class Recipe(models.Model):
     est_carbs = models.IntegerField(validators=[MinValueValidator(1)], blank=True, null=True)
     est_protein = models.IntegerField(validators=[MinValueValidator(1)], blank=True, null=True)
     est_fat = models.IntegerField(validators=[MinValueValidator(1)], blank=True, null=True)
+    servings = models.IntegerField(validators=[MinValueValidator(1)], default=1)
     
     def serialize(self):
+        from .utils import format_time
+        
         return {
             "id": self.id,
             "name": self.name,
@@ -92,13 +97,14 @@ class Recipe(models.Model):
             "comments": [comment.serialize() for comment in self.comments.order_by("-timestamp")],
             "likers": [liker.serialize() for liker in self.likers.all()],
             "savers": [saver.serialize() for saver in self.savers.all()],
-            "timestamp": self.timestamp.strftime("%b %d %Y, %I:%M %p"),
+            "timestamp": self.timestamp,
             "difficulty": self.difficulty.name,
             "carbs": self.est_carbs,
             "protein": self.est_protein,
             "fat": self.est_fat,
             "calories": round((4 * (self.est_carbs + self.est_protein)) + (9 * self.est_fat)) if self.est_carbs and self.est_protein and self.est_fat else None,
-            "duration": self.est_duration,
+            "duration": format_time(self.est_duration),
+            "servings": self.servings,
         }
         
     def __str__(self):
@@ -110,13 +116,15 @@ class Comment(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="comments")
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     timestamp = models.DateTimeField(auto_now_add=True)
+    likers = models.ManyToManyField(User, related_name="liked_comments", blank=True)
 
     def serialize(self):
         return {
             "id": self.id,
             "content": self.content,
-            "recipe": self.recipe.serialize(),
+            "recipe": self.recipe.id,
             "commenter": self.commenter.serialize(),
+            "likers": [liker.serialize() for liker in self.likers.all()],
             "timestamp": self.timestamp,
         }
 

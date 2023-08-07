@@ -1,0 +1,25 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block title %}My feed - {% endblock %}
+
+
+{% block body %}
+    
+    <div id="mainLayout" class="feed-main opacity-0">
+        <!-- Recipe carousel -->
+        <div id="feedRecipesCarousel" class="feed-recipes-carousel-none">
+            <div>No recipes in your timeline.</div>
+            <a href="{% url 'explore' %}" class="tracking-widest uppercase link">Back to explore</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/feed.js' %}?{% now 'U' %}" type="module"></script>
+
+{% endblock %}

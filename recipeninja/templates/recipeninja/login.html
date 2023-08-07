@@ -1,9 +1,13 @@
 {% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block title %}Login - {% endblock %}
 
 
 {% block body %}
 
-    <div class="flex flex-col justify-center items-center w-full text-center">
+    <div id="mainLayout" class="flex flex-col justify-center items-center w-full text-center smooth duration-500 opacity-0">
 
         <!-- Title -->
         <div class="heading mb-3 font-semibold">
@@ -37,5 +41,12 @@
         </div>
 
     </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/portal.js' %}?{% now 'U' %}" type="module"></script>
 
 {% endblock %}

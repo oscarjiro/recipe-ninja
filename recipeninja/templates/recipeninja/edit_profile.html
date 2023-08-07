@@ -1,0 +1,157 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block title %}Edit your profile - {% endblock %}
+
+
+{% block body %}
+
+    <div id="mainLayout" class="edit-main opacity-0">
+        <!-- Heading -->
+        <div class="edit-heading">Edit Profile</div>
+
+        <form action="{% url 'edit_profile' %}" method="post" enctype="multipart/form-data" class="edit-form">
+            <!-- Banner -->
+            <div class="edit-banner-container">
+                <!-- Default banner -->
+                <div class="edit-banner-default">
+                </div>
+
+                <!-- Edit button -->
+                <div id="bannerEditButton" class="edit-icon-banner-container group">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="edit-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                    </svg>
+                </div>
+
+                  <!-- Banner preview -->
+                  <img 
+                    id="bannerPreview"
+                    src="{{ self.banner }}"
+                    class="{% if not self.banner %}hidden{% endif %} absolute object-cover w-full h-full"
+                >
+
+                <!-- Banner input -->
+                <input 
+                    id="bannerInput"
+                    name="banner"
+                    type="file"
+                    accept="image/*"
+                    class="hidden opacity-0"
+                >
+
+                <!-- Remove banner -->
+                <input 
+                    id="bannerRemoveInput"
+                    name="bannerRemove"
+                    value=""
+                    class="hidden opacity-0"
+                >
+            </div>
+
+            <div id="imageErrorContainer" class="hidden">
+            </div>
+            
+            <!-- Profile picture -->
+            <div class="edit-picture-container">
+                <!-- Initial -->
+                <div class="edit-picture-missing">
+                    {{ self.username|slice:1|capfirst }}
+                </div>
+
+                <!-- Profile picture preview -->
+                <img 
+                    id="profilePicturePreview"
+                    src="{{ self.profile_picture }}"
+                    class="{% if not self.profile_picture %}hidden{% endif %} absolute object-cover w-full h-full"
+                >
+
+                <!-- Profile picture input -->
+                <input 
+                    id="profilePictureInput"
+                    name="profilePicture"
+                    type="file"
+                    accept="image/*"
+                    class="hidden opacity-0"
+                >
+
+                <!-- Remove profile picture -->
+                <input 
+                    id="profilePictureRemoveInput"
+                    name="profilePictureRemove"
+                    value=""
+                    class="hidden opacity-0"
+                >
+            </div>
+
+            <!-- Edit button -->
+            <div id="profilePictureEditButton" class="edit-icon-picture-container group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="edit-icon">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                </svg>
+            </div>
+
+            <!-- Text fields -->
+            <div class="edit-text-fields">
+                <!-- First and last name -->
+                <div class="edit-names-container">
+                    <div class="edit-input-container">
+                        <div id="firstNameLabel" class="edit-label">
+                            First Name<span class="text-invalid">*</span>
+                        </div>
+                        <input
+                            id="firstNameInput"
+                            name="firstName" 
+                            type="text" 
+                            class="recipe-form-input"
+                            value={{ self.first_name }}
+                        >
+                    </div>
+                    <div class="edit-input-container">
+                        <div id="lastNameLabel" class="edit-label">
+                            Last Name<span class="text-invalid">*</span>
+                        </div>
+                        <input
+                            id="lastNameInput"
+                            name="lastName" 
+                            type="text" 
+                            class="recipe-form-input"
+                            value={{ self.last_name }}
+                        >
+                    </div>
+                </div>
+
+                <!-- Bio -->
+                <div class="edit-bio-container">
+                    <div id="bioLabel" class="edit-label">
+                        Bio
+                    </div>
+                    <textarea 
+                        name="bio" 
+                        id="bioInput" 
+                        rows="4" 
+                        class="recipe-form-textarea"
+                    >{% if self.bio %}{{ self.bio }}{% endif %}</textarea>
+                    <div class="edit-text-counter">
+                        <span id="bioCounter">0</span>/300
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <button id="saveProfileButton" class="button">Save</button>
+
+                {% csrf_token %}
+            </div>
+        </form>
+
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/edit_profile.js' %}?{% now 'U' %}" type="module"></script>
+
+{% endblock %}

@@ -2,9 +2,12 @@
 {% load static %}
 
 
+{% block title %}Create your own recipe - {% endblock %}
+
+
 {% block body %}
 
-    <div class="w-full flex flex-col justify-center items-center">
+    <div id="mainLayout" class="w-full flex flex-col justify-center items-center smooth duration-500 opacity-0">
 
         <!-- Title -->
         <div class="w-full max-w-[1000px] heading font-[500] mb-8">
@@ -49,7 +52,10 @@
                         {{ errors.image }}
                     </div>
                 {% endif %}
-                <div class="relative overflow-hidden rounded-xl w-full h-[350px] flex justify-center items-center text-xs bg-[#121212]/80 text-[var(--white)] font-bold">
+                <div 
+                    class="relative overflow-hidden rounded-xl w-full flex justify-center items-center text-xs bg-[#121212]/80 text-[var(--white)] font-bold
+                            h-[150px] min-[320px]:h-[200px] min-[420px]:h-[250px] min-[500px]:h-[300px] min-[620px]:h-[350px]"
+                >
                     No image provided.
                     <img 
                         id="previewImage"
@@ -102,6 +108,30 @@
                 ></textarea>
             </div>
 
+            <!-- Servings -->
+            <div class="flex flex-col space-y-2">
+                <div id="servingsHeader" class="flex flex-col">
+                    <div class="text-lg font-[500]">Servings<span class="text-invalid">*</span></div>
+                    <div class="text-xs italic">
+                        Provide the number of servings for your reciple (at least 1).
+                    </div>
+                </div>
+                {% if errors.servings %}
+                    <div id="servingsErrorMessage" class="text-invalid text-sm">
+                        {{ errors.servings }}
+                    </div>
+                {% endif %}
+                <input 
+                    id="servingsInput"
+                    type="number" 
+                    name="servings"
+                    spellcheck="false"
+                    autocomplete="off"
+                    class="recipe-form-input"
+                    min="1"
+                >
+            </div>
+
             <!-- Ingredients -->
             <div class="space-y-1">
                 <div id="ingredientsHeader" class="flex flex-col">
@@ -145,7 +175,7 @@
                         </svg>
                     </div>
                     <div class="text-xs italic">
-                        You must include at least 1 instruction. The maximum limit is 15 instructions.
+                        You must include at least 1 instruction. The maximum limit is 30 instructions.
                     </div>
                 </div>
                 {% if errors.instructions %}
@@ -268,63 +298,62 @@
                             {{ errors.difficulty }}
                         </div>
                     {% endif %}
-                    <!--   
-                        <select name="difficulty" id="difficultyInput" class="bg-[transparent] focus:outline-0">
-                            {% for difficulty in difficulties %}
-                                <option value="{{ difficulty }}">{{ difficulty }}</option>
-                            {% endfor %}
-                        </select>
-                    -->
                     <div class="min-[1010px]:h-[50px] min-[1010px]:overflow-hidden">
                         <div 
+                            id="difficultyButtons"
                             class="grid grid-cols-1 min-[300px]:grid-cols-2 gap-2
                                     min-[500px]:flex min-[500px]:space-x-1
                                     min-[1010px]:grid min-[1010px]:space-x-0 min-[1010px]:grid-cols-{{ difficulties.count }} min-[1010px]:gap-[50px] min-[1010px]:overflow-y-auto min-[1010px]:pb-[50px]"
                         >
                             {% for difficulty in difficulties %}
-                                <button id="difficulty{{ difficulty.name }}" class="cuisine-filter-button-unselected text-base max-[1010px]:w-full" type="button">
+                                <button id="difficulty{{ difficulty.name }}" class="form-button-unselected" type="button">
                                     {{ difficulty.name }}
                                 </button>
                             {% endfor %}
                         </div>
+                        <input 
+                            id="difficultyInput" 
+                            name="difficulty" 
+                            type="text" 
+                            class="hidden"
+                        >
                     </div>
                 </div>
     
                 <!-- Cuisine -->
                 <div class="flex flex-col space-y-2 w-full min-[1010px]:w-1/2">
-                    <div id="cuisineHeader" class="flex flex-col">
+                    <div id="cuisinesHeader" class="flex flex-col">
                         <div class="text-lg font-[500]">Cuisines</div>
                         <div class="text-xs italic">
                             Optionally select one or more cuisines that best fit your recipe.
                         </div>
                     </div>
-                    {% if errors.cuisine %}
-                        <div id="cuisineErrorMessage" class="text-invalid text-sm">
-                            {{ errors.cuisine }}
+                    {% if errors.cuisines %}
+                        <div id="cuisinesErrorMessage" class="text-invalid text-sm">
+                            {{ errors.cuisines }}
                         </div>
                     {% endif %}
-                    <!--
-                        <select name="cuisine" id="cuisineInput" multiple class="bg-transparent focus:outline-0">
-                            {% for cuisine in cuisines %}
-                                <option value="{{ cuisine }}">{{ cuisine }}</option>
-                            {% endfor %}
-                        </select>
-                    -->
                     <div class="min-[1010px]:h-[50px] min-[1010px]:overflow-hidden">
                         <div 
+                            id="cuisinesButtons"
                             class="grid min-[280px]:grid-cols-2 min-[370px]:grid-cols-3 gap-2
                                     min-[1010px]:grid-cols-{{ cuisines.count }} min-[1010px]:gap-[125px] min-[1010px]:overflow-y-auto min-[1010px]:pb-[50px]"
                         >
                             {% for cuisine in cuisines %}
-                                <button id="cuisine{{ cuisine.name }}" class="cuisine-filter-button-unselected text-base max-[1010px]:w-full" type="button">
+                                <button id="cuisine{{ cuisine.name }}" class="form-button-unselected" type="button">
                                     {{ cuisine.name }}
                                 </button>
                             {% endfor %}
                         </div>
+                        <input 
+                            id="cuisinesInput" 
+                            name="cuisines" 
+                            type="text" 
+                            class="hidden"
+                        >
                     </div>
                 </div>
             </div>
-
 
             <!-- Submit Button -->
             <button id="createRecipeButton" class="button" type="submit">
@@ -341,6 +370,6 @@
 
 {% block script %}
 
-    <script src="{% static 'recipeninja/scripts/create.js' %}?{% now 'U' %}"></script>
+    <script src="{% static 'recipeninja/scripts/create.js' %}?{% now 'U' %}" type="module"></script>
 
 {% endblock %}

@@ -1,0 +1,30 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block title %}Saved recipes - {% endblock %}
+
+
+{% block body %}
+    
+    <div id="mainLayout" class="saved-recipes-main opacity-0">
+
+        <!-- Heading -->
+        <div class="heading font-[500] h-[10%]">Saved Recipes</div>
+
+        <!-- Recipe carousel -->
+        <div id="savedRecipesCarousel" class="saved-recipes-carousel-none">
+            <div>No saved recipes.</div>
+            <a href="{% url 'explore' %}" class="tracking-widest uppercase link">Back to explore</a>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/saved_recipes.js' %}?{% now 'U' %}" type="module"></script>
+
+{% endblock %}

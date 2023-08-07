@@ -11,18 +11,13 @@ body {
 
 /* Track styles */
 *::-webkit-scrollbar-track {
-    background: #ececec; /* Adjust the background color as desired */
+    background: transparent; /* Adjust the background color as desired */
 }
 
 /* Handle styles */
 *::-webkit-scrollbar-thumb {
-    background: rgba(18, 18, 18, 0.9); /* Adjust the color of the scrollbar handle as desired */
+    background: rgba(18, 18, 18, 0); /* Adjust the color of the scrollbar handle as desired */
     border-radius: 4px; /* Adjust the border-radius as desired */
-}
-
-/* Handle on hover */
-*::-webkit-scrollbar-thumb:hover {
-    background: #121212; /* Adjust the color of the scrollbar handle on hover as desired */
 }
 
 @media (max-height: 600px) {

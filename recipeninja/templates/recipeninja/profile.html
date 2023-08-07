@@ -1,0 +1,146 @@
+{% extends "recipeninja/layout.html" %}
+{% load static %}
+
+
+{% block title %}{{ profile.first_name }} {{ profile.last_name }} (@{{ profile.username }}) - {% endblock %}
+
+
+{% block body %}
+
+    {% if profile %}
+    
+        <div class="w-full flex items-center justify-center">
+
+            <div id="mainLayout" class="profile-page-layout opacity-0">
+
+                <!-- Header -->
+                <div id="profileHeader" class="profile-header">
+                    <!-- Banner -->
+                    <div class="profile-banner {% if not profile.banner %}opacity-[0.6]{% endif %}">
+                        {% if profile.banner %}
+                            <img 
+                                src="{{ profile.banner.url }}" 
+                                alt="{{ profile.username }} Banner"
+                                class="object-cover w-full h-full"
+                            >
+                        {% endif %}
+                    </div>
+
+                    <!-- Profile picture and Count -->
+                    <div class="profile-page-picture-count-container">
+
+                        <!-- Profile picture -->
+                        <div class="profile-page-picture-container {% if profile.banner %}drop-shadow-[0_-5px_5px_rgba(0,0,0,0.5)]{% endif %}">
+                            {% if profile.profile_picture %}
+                                <img 
+                                    src="{{ profile.profile_picture.url }}" 
+                                    alt="{{ profile.username }} Profile Picture"
+                                    class="w-full h-full object-cover"
+                                >
+                            {% else %}
+                                <div class="profile-page-picture-missing">
+                                    <span class="profile-page-picture-missing-initial">
+                                        {{ profile.username|capfirst|slice:1 }}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Count-->
+                        <div class="profile-count-container">
+                            <!-- Followers -->
+                            <div id="followers" class="profile-count-item">
+                                <div id="followersCount" class="profile-count-number">
+                                    {{ profile.followers.followers.all.count }}
+                                </div>
+                                <div class="profile-count-title">
+                                    Followers
+                                </div>
+                            </div>
+    
+                            <!-- Following -->
+                            <div id="following" class="profile-count-item">
+                                <div id="followingCount" class="profile-count-number">
+                                    {{ profile.followings.all.count }}
+                                </div>
+                                <div class="profile-count-title">
+                                    Following
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                    <!-- Name and Bio -->
+                    <div class="w-full space-y-3">
+                        <!-- Name and Username -->
+                        <div class="profile-names-container">
+                            <!-- Name -->
+                            <div class="profile-name">
+                                <div>
+                                    {{ profile.first_name }} {{ profile.last_name }}
+                                </div>
+                                {% if profile.is_staff %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="profile-verified-icon">
+                                        <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                                    </svg> 
+                                {% endif %}
+                            </div>
+                
+                            <!-- Username -->
+                            <div class="profile-username">
+                                @{{ profile.username }}
+                            </div>
+                        </div>
+
+                        <!-- Bio -->
+                        {% if profile.bio %}
+                            <div class="profile-bio">
+                                {{ profile.bio }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if profile != user %}
+                        <!-- Follow button -->
+                        <button id="toggleFollowButton" class="profile{% if not is_following %}-not{% endif %}-followed-button">
+                            Follow{% if is_following %}ing{% endif %}
+                        </button>
+                    {% else %}
+                        <!-- Edit profile button -->
+                        <a id="editProfileButton" href="{% url 'edit_profile' %}" class="profile-not-followed-button">
+                            Edit Profile
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Recipes -->
+                <div class="profile-recipes-container">
+                    <div id="recipesCount" class="profile-recipes-title">
+                        {{ profile.posted_recipes.all.count }} recipe{% if profile.posted_recipes.all.count > 1 %}s{% endif %}
+                    </div>
+                    <div class="profile-recipes-border"></div>
+                    <div id="userRecipeCarousel" class="profile-recipes-carousel">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    {% else %}
+
+        <div id="mainLayout" class="w-full h-[calc(100vh-200px)] flex flex-col space-y-4 justify-center items-center smooth duration-500 opacity-0">
+            <div class="font-[900] text-4xl">User does not exist :(</div>
+        </div>
+
+    {% endif %}
+
+
+{% endblock %}
+
+
+{% block script %}
+
+    <script src="{% static 'recipeninja/scripts/profile.js' %}?{% now 'U' %}" type="module"></script>
+
+{% endblock %}

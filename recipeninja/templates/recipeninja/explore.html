@@ -2,24 +2,25 @@
 {% load static %}
 
 
+{% block title %}Explore recipes - {% endblock %}
+
+
 {% block body %}
 
     <!-- Searchbar Text -->
-    <div class="mb-6">
+    <div id="pageHeader" class="mb-6 smooth duration-500 opacity-0">
         <div class="heading font-[500]">
             Finding recipes have never been quicker and simpler.
         </div>
     </div>
 
     <!-- Layout -->
-    <div  id="mainLayout" class="flex flex-col min-[1100px]:flex-row w-[calc(100vw-4rem)] fixed overflow-y-auto overflow-x-hidden h-[calc(100vh-2rem-160px)] smooth duration-[500ms] opacity-0">
+    <div  id="mainLayout" class="flex flex-col min-[1100px]:flex-row w-[calc(100vw-4rem)] fixed overflow-y-auto overflow-x-hidden h-[calc(100vh-2rem-160px)] smooth duration-500 opacity-0">
         <!-- Cuisine filters -->
         <div class="order-2 min-[1100px]:w-[150px] min-[1100px]:order-1 overflow-hidden h-full max-h-[50px] min-[1100px]:max-h-none mb-2 min-[1100px]:mb-auto">
             <div 
                 id="cuisineFilters" 
-                class="grid w-full 
-                        grid-cols-9 gap-[130px] overflow-x-scroll pb-[10px]
-                        min-[1100px]:grid-cols-none min-[1100px]:gap-4 min-[1100px]:overflow-x-hidden min-[1100px]:overflow-y-auto min-[1100px]:max-w-none min-[1100px]:pb-auto"
+                class="cuisine-filters-carousel"
             >
             </div>
         </div>

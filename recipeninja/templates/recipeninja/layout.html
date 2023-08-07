@@ -7,7 +7,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Recipe Ninja</title>
+        <title>{% block title %}{% endblock %}Recipe Ninja</title>
+        <link rel="icon" type="image/png" href="{% static 'recipeninja/logo.svg' %}">
         <link rel="stylesheet" href="{% static 'recipeninja/styles.css' %}?{% now 'U' %}">
         <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
         <script src="https://cdn.tailwindcss.com"></script>
@@ -44,7 +45,18 @@
                 .mesh-gradient {
                     background-color: rgb(253, 164, 175);
                     background-image: radial-gradient(at 79% 77%, rgb(91, 33, 182) 0, transparent 26%), radial-gradient(at 35% 44%, rgb(30, 58, 138) 0, transparent 76%), radial-gradient(at 75% 14%, rgb(254, 249, 195) 0, transparent 70%), radial-gradient(at 72% 33%, rgb(64, 64, 64) 0, transparent 18%), radial-gradient(at 43% 23%, rgb(55, 48, 163) 0, transparent 31%), radial-gradient(at 84% 88%, rgb(157, 23, 77) 0, transparent 98%);
-                    opacity: 0.6;
+                }
+
+                .absolute-center {
+                    @apply top-[50%] left-[50%] [transform:translate(-50%,-50%)];
+                }
+
+                .absolute-center-x {
+                    @apply top-0 left-[50%] [transform:translateX(-50%)];
+                }
+
+                .absolute-center-y {
+                    @apply top-[50%] left-0 [transform:translateY(-50%)];
                 }
 
 
@@ -117,8 +129,16 @@
 
 
                 /* EXPLORE */
+                .cuisine-filters-carousel {
+                    @apply grid w-full gap-[110px]
+                            grid-cols-10 min-[400px]:gap-[130px] overflow-x-scroll overflow-y-hidden pb-[10px] 
+                            min-[1100px]:grid-cols-none min-[1100px]:gap-4 min-[1100px]:overflow-x-hidden min-[1100px]:overflow-y-auto min-[1100px]:max-w-none min-[1100px]:pb-0 min-[1100px]:h-full min-[1100px]:overflow-x-hidden min-[1100px]:w-[200px];
+                }
+
                 .cuisine-filter-button-unselected {
-                    @apply text-lg rounded-lg p-2 border border-[var(--black)] bg-transparent text-[var(--black)] smooth hover:bg-[var(--black)] hover:text-[var(--white)] w-[120px];
+                    @apply rounded-lg p-2 border border-[var(--black)] bg-transparent text-[var(--black)] smooth hover:bg-[var(--black)] hover:text-[var(--white)] 
+                            w-[100px] text-base
+                            min-[400px]:w-[120px] min-[400px]:text-lg;
                 }
 
                 .cuisine-filter-button-selected {
@@ -144,26 +164,928 @@
                     color: var(--white); 
                 }
 
+                .form-button-unselected {
+                    @apply cuisine-filter-button-unselected text-base max-[1010px]:w-full;
+                }
+
+                .form-button-selected {
+                    @apply cuisine-filter-button-selected text-base max-[1010px]:w-full;
+                }
+
 
                 /* EXPLORE */
                 .recipe-carousel {
-                    @apply order-3 grid overflow-y-scroll h-full smooth duration-500 gap-4 
+                    @apply order-3 grid overflow-y-scroll h-full smooth duration-500 gap-4 overflow-hidden
                             min-[900px]:grid-cols-3 
                             min-[600px]:grid-cols-2
                             grid-cols-1;
                 }
 
+
+                /* RECIPE BOX */
                 .recipe-container {
-                    @apply flex flex-col space-y-2 overflow-hidden rounded-lg w-full h-[300px] smooth hover:scale-105 cursor-pointer p-4;
+                    @apply flex flex-col space-y-2 overflow-hidden rounded-lg w-full h-[300px] 
+                            smooth min-[700px]:hover:scale-105 cursor-pointer 
+                            px-0 py-4 min-[700px]:p-4;
                 }
 
                 .recipe-container-image {
-                    @apply w-full h-[200px] rounded-md object-cover overflow-hidden flex justify-center items-center font-bold bg-[#121212]/80 text-[var(--white)] text-xs;
+                    @apply relative w-full h-[200px] rounded-md object-cover overflow-hidden flex justify-center items-center font-bold bg-[#121212]/80 text-[var(--white)] text-xs;
+                }
+
+                .recipe-image {
+                    @apply w-full h-full object-cover flex items-center justify-center;
+                }
+
+                .recipe-tags-container {
+                    @apply absolute flex space-x-2 left-[5px] top-[5px] text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 smooth;
+                }
+
+                .recipe-tag-item {
+                    @apply bg-[#121212]/70 rounded-full py-1 px-3
+                }
+
+                .recipe-tag-text {
+                    @apply text-fade font-[900];
+                }
+
+                .recipe-name-container {
+                    @apply font-[500] text-2xl truncate left-[20px] bottom-[40px];
+                }
+
+                .recipe-poster-container {
+                    @apply flex items-center space-x-1;
+                }
+
+                .recipe-poster-username {
+                    @apply flex items-center space-x-1 font-[500] link;
+                }
+
+                .recipe-username-verified {
+                    @apply text-[var(--blue)] mt-1 w-[15px] h-[15px];
+                }
+
+                .recipe-description-container {
+                    @apply text-sm min-[400px]:line-clamp-1 line-clamp-2;
+                }
+
+                .recipe-icon-button {
+                    @apply w-4 h-4 mt-[0.8px] ml-1 smooth hover:scale-[1.2] hover:rotate-[2deg] hover:brightness-[0.6];
                 }
 
                 
                 /* RECIPE PAGE */
+                .recipe-page-main {
+                    @apply w-full smooth duration-500
+                            flex flex-col space-y-2 
+                            min-[900px]:flex-row min-[900px]:space-y-0 min-[900px]:space-x-8 min-[900px]:h-[calc(100vh-160px)] overflow-hidden 
+                            min-[1230px]:px-[50px] 
+                            min-[1500px]:px-[100px];
+                }
+
+
+                /* RECIPE PAGE: LEFT SIDE */
+                .left-side {
+                    @apply w-full min-[900px]:w-[60%] flex flex-col;
+                }
+
+                .left-image-container {
+                    @apply overflow-hidden rounded-2xl mb-3
+                            h-[150px] min-[300px]:h-[200px] min-[350px]:h-[250px]
+                            min-[500px]:h-[50vh] min-[500px]:min-h-[300px]
+                            min-[900px]:min-h-0 min-[900px]:h-[calc((100vh-160px)/2)];
+                }
+
+                .left-image {
+                    @apply w-full h-full object-cover
+                }
+
+                .left-recipe-name {
+                    @apply text-xl min-[220px]:text-2xl min-[260px]:text-3xl 
+                            min-[320px]:text-4xl min-[450px]:text-5xl 
+                            min-[1100px]:text-6xl font-[900] 
+                            w-full line-clamp-2;
+                }
+
+                .left-poster-icons-container {
+                    @apply flex
+                            flex-col space-y-2
+                            min-[370px]:flex-row min-[370px]:items-center min-[370px]:justify-between min-[370px]:space-y-0
+                            mb-5;
+                }
+
+                .left-poster {
+                    @apply text-base min-[320px]:text-lg min-[450px]:text-xl 
+                            min-[1100px]:text-2xl 
+                            font-[400] flex 
+                            space-x-1 min-[450px]:space-x-2;
+                }
+
+                .left-poster-username {
+                    @apply text-base min-[320px]:text-lg min-[450px]:text-xl 
+                            min-[1100px]:text-2xl 
+                            font-[500] link flex space-x-1 w-full items-center;
+                }
+
+                .left-poster-checkmark {
+                    @apply w-5 h-5
+                            min-[450px]:w-6 min-[450px]:h-6 
+                            mt-1 text-[var(--blue)];
+                }
+
+                .left-icons-container {
+                    @apply flex items-center font-bold
+                            justify-between px-0 min-[320px]:px-8
+                            min-[370px]:px-0 min-[370px]:space-x-4
+                            min-[500px]:space-x-8
+                            text-base min-[450px]:text-lg 
+                            min-[1100px]:text-xl;
+                }
+
+                .left-icon-item {
+                    @apply flex space-x-1 min-[1100px]:space-x-2 items-center;
+                }
+
+                .left-icon-button {
+                    @apply w-5 h-5
+                            min-[450px]:w-6 min-[450px]:h-6 
+                            min-[1100px]:w-7 min-[1100px]:h-7 
+                            mt-1 cursor-pointer 
+                            smooth hover:brightness-[0.6] hover:scale-[1.2] hover:rotate-[5deg];
+                }
+
+                .left-description {
+                    @apply text-xs min-[280px]:text-sm min-[320px]:text-base 
+                            min-[360px]:text-lg min-[450px]:text-xl
+                            mb-8;
+                }
+
+                .left-details-nutrition-container {
+                    @apply flex mb-6
+                            flex-col space-y-6 items-center
+                            min-[600px]:flex-row min-[600px]:space-y-0 min-[600px]:justify-between;
+                }
+
+                .left-details-container {
+                    @apply w-full flex items-center
+                            justify-between
+                            min-[450px]:justify-center min-[450px]:space-x-24
+                            min-[600px]:space-x-12 min-[600px]:justify-start
+                            min-[900px]:space-x-6 min-[1150px]:space-x-12;
+                }
+
+                .left-details-item {
+                    @apply flex flex-col items-center;
+                }
+
+                .left-details-title {
+                    @apply text-xs min-[250px]:text-sm
+                            min-[300px]:text-base
+                            min-[360px]:text-lg
+                            min-[600px]:text-base 
+                            min-[740px]:text-lg 
+                            min-[900px]:text-[14px] min-[1150px]:text-lg 
+                            tracking-wider;
+                }
+
+                .left-details-content {
+                    @apply text-base min-[250px]:text-xl
+                            min-[300px]:text-2xl min-[360px]:text-3xl
+                            min-[600px]:text-2xl min-[740px]:text-3xl 
+                            min-[900px]:text-[22px] min-[1150px]:text-3xl 
+                            font-[500];
+                }
+
+                .left-nutrition-container {
+                    @apply flex py-2 border border-[var(--black)] rounded-xl
+                            w-full justify-between px-2 min-[230px]:px-4 min-[260px]:px-6
+                            min-[450px]:w-auto min-[450px]:space-x-12 min-[450px]:px-8
+                            min-[600px]:space-x-6 min-[600px]:px-6
+                            min-[740px]:space-x-8 min-[740px]:px-8
+                            min-[900px]:space-x-6 min-[900px]:px-6;
+                }
+
+                .left-nutrition-item {
+                    @apply flex flex-col space-y-0 justify-center items-center;
+                }
+
+                .left-nutrition-title {
+                    @apply mt-1 tracking-wider font-[500]
+                            text-[6px]
+                            min-[280px]:text-[8px]
+                            min-[320px]:text-[10px]
+                            min-[370px]:text-xs
+                            min-[600px]:text-[10px]
+                            min-[740px]:text-xs
+                            min-[900px]:text-[8px] 
+                            min-[1150px]:text-[10px];
+                }
+
+                .left-nutrition-content {
+                    @apply font-[500] 
+                            text-lg
+                            min-[280px]:text-xl
+                            min-[320px]:text-2xl
+                            min-[370px]:text-3xl
+                            min-[600px]:text-2xl
+                            min-[740px]:text-3xl
+                            min-[900px]:text-2xl 
+                            min-[1150px]:text-3xl;
+                }
+
+
+                /* RECIPE PAGE: RIGHT SIDE */
+                .right-side {
+                    @apply relative rounded-xl w-full h-full 
+                            min-[900px]:bg-[#121212]/10 min-[900px]:overflow-hidden 
+                            min-[900px]:w-[40%] min-[900px]:p-5 min-[900px]:pb-0;
+                }
+
+                .right-section {
+                    @apply z-[-1] w-full h-[calc(100%-50px)] flex flex-col smooth duration-500
+                            p-0 overflow-x-hidden
+                            space-y-4 min-[360px]:space-y-8 
+                            min-[900px]:px-3 min-[900px]:py-1
+                            min-[1100px]:px-5 min-[1100px]:py-3;
+                }
+
+                .right-section-title {
+                    @apply uppercase tracking-widest
+                            text-xl min-[360px]:text-2xl
+                            min-[740px]:text-3xl min-[1100px]:text-4xl;
+                }
+
+                .right-ingredients-content-container {
+                    @apply h-full overflow-y-auto pb-[50px]
+                            text-[10px] min-[220px]:text-xs 
+                            min-[260px]:text-sm min-[320px]:text-base 
+                            min-[360px]:text-lg min-[450px]:text-xl
+                            min-[740px]:text-2xl min-[900px]:text-xl;
+                }
+
+                .right-ingredients-list {
+                    @apply font-[500] pl-8 list-disc list-inside marker:link 
+                            space-y-2 min-[260px]:space-y-4;
+                }
+
+                .right-instructions-content-container {
+                    @apply h-full overflow-y-auto pb-[50px]
+                            text-[10px] min-[220px]:text-xs min-[260px]:text-sm
+                            min-[320px]:text-base min-[360px]:text-lg
+                            min-[450px]:text-xl min-[740px]:text-2xl 
+                            min-[900px]:text-xl min-[1100px]:text-2xl
+                            space-y-8 min-[1100px]:space-y-12;
+                }
+
+                .right-instruction-item {
+                    @apply flex items-start space-x-4;
+                }
+
+                .right-instruction-step {
+                    @apply uppercase [writing-mode:vertical-rl] mt-[10px]
+                            font-[500] link rotate-180 tracking-wider 
+                            text-[6px] min-[260px]:text-[8px]
+                            min-[320px]:text-[10px] min-[740px]:text-xs 
+                            min-[900px]:text-[10px] min-[1100px]:text-xs;
+                }
+
+                .right-reviews-content-container {
+                    @apply h-full space-y-16
+                            text-[8px] min-[220px]:text-xs min-[260px]:text-sm 
+                            min-[360px]:text-base 
+                            min-[500px]:text-xl min-[900px]:text-base min-[1100px]:text-lg;
+                }
+
+                .right-review-input {
+                    @apply recipe-form-textarea h-[100px] p-3 placeholder:text-[#121212]/40;
+                }
+
+                .right-review-unauth-input {
+                    @apply w-full h-[100px] flex items-center justify-center border border-[var(--black)] rounded-xl;
+                }
+
+                .right-reviews-carousel {
+                    @apply w-full overflow-y-auto 
+                            space-y-4 
+                            min-[360px]:space-y-8 min-[500px]:space-y-12 
+                            pb-[100px];
+                }
+
+                .right-review-count {
+                    @apply text-lg min-[360px]:text-2xl 
+                            uppercase tracking-widest;
+                }
+
+                .right-review-container {
+                    @apply flex space-x-2 min-[360px]:space-x-4;
+                }
+
+                .right-review-body {
+                    @apply flex flex-col space-y-3 w-full overflow-hidden;
+                }
+
+                .right-review-username {
+                    @apply text-lg
+                            min-[360px]:text-xl min-[500px]:text-2xl 
+                            min-[900px]:text-xl min-[1100px]:text-2xl 
+                            font-[500] link flex items-center space-x-1;
+                }
+
+                .right-review-timestamp {
+                    @apply text-[#121212]/40 font-bold 
+                            min-[900px]:mt-1 min-[1100px]:mt-0
+                            hidden min-[280px]:block
+                            text-[8px]
+                            min-[360px]:text-[11px] min-[500px]:text-sm 
+                            min-[900px]:text-[11px] min-[1100px]:text-sm;
+                }
+
+                .right-review-header {
+                    @apply flex items-center justify-between;
+                }
+
+                .right-review-username-checkmark {
+                    @apply text-[var(--blue)]
+                            w-5 h-5 
+                            min-[500px]:w-6 min-[500px]:h-6 
+                            min-[900px]:w-5 min-[900px]:h-5 
+                            min-[1100px]:w-6 min-[1100px]:h-6 mt-1;
+                }
+
+                .right-review-none {
+                    @apply flex justify-center items-center w-full;
+                }
+
+                .right-review-content {
+                    @apply font-normal [overflow-wrap:break-word];
+                }
+
+                .right-review-icons-container {
+                    @apply flex items-center space-x-4;
+                }
+
+                .right-review-icon-item {
+                    @apply flex items-center space-x-1;
+                }
+
+                .right-review-icon {
+                    @apply w-[17px] h-[17px]
+                            min-[500px]:w-[20px] min-[500px]:h-[20px] 
+                            mt-[3px] cursor-pointer smooth hover:brightness-[0.6] hover:scale-[1.2] hover:rotate-[5deg];
+                }
+
+                .profile-picture-container {
+                    @apply cursor-pointer aspect-square rounded-full h-full bg-[var(--black)] overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth
+                            w-[35px]
+                            min-[360px]:w-[45px]
+                            min-[500px]:w-[60px]                        
+                            min-[900px]:w-[45px] 
+                            min-[1100px]:w-[60px] 
+                            shrink-0;
+                }
+
+                .profile-picture-missing-container {
+                    @apply flex items-center justify-center w-full h-full;
+                }
+
+                .profile-picture-missing-text {
+                    @apply text-fade uppercase font-[900] group-hover:glow smooth
+                            text-[8px] min-[360px]:text-xs min-[500px]:text-base 
+                            min-[900px]:text-xs min-[1100px]:text-base;
+                }
+
+                .right-share-content-container {
+                    @apply h-full overflow-y-auto space-y-8 pb-[50px]
+                            text-base min-[360px]:text-lg
+                            min-[500px]:text-xl min-[1100px]:text-2xl;
+                }
+
+                .right-share-copy-box {
+                    @apply flex items-center border border-[var(--black)] rounded-xl justify-between overflow-hidden;
+                }
+
+                .right-share-copy-link {
+                    @apply truncate px-3 select-text tracking-tight font-[500]
+                            text-base min-[360px]:text-lg min-[450px]:text-xl min-[900px]:text-lg 
+                            min-[1100px]:text-xl min-[1400px]:text-2xl;
+                }
+
+                .right-share-copy-button-container {
+                    @apply h-full p-3 border-l border-[var(--black)] items-center bg-[var(--black)] cursor-pointer smooth hover:bg-[#121212]/80;
+                }
+
+                .right-share-copy-button {
+                    @apply w-6 h-6 text-[var(--white)];
+                }
+
+                .mini-navbar-container {
+                    @apply z-[1] w-full h-[80px] flex items-center justify-center
+                            bg-none mb-3
+                            min-[900px]:absolute min-[900px]:left-0 min-[900px]:bottom-0 min-[900px]:p-5 min-[900px]:mb-auto
+                            min-[900px]:bg-gradient-to-t min-[900px]:from-[#c2c2c2] min-[900px]:from-70%; 
+                }
+
+                .mini-navbar {
+                    @apply w-full 
+                            h-[40px] min-[320px]:h-[45px] min-[450px]:h-[50px] 
+                            bg-[var(--black)] rounded-full flex items-center justify-around
+                            px-4 min-[1100px]:px-10; 
+                }
+
+                .mini-navbar-button {
+                    @apply cursor-pointer text-[var(--white)]
+                            smooth hover:glow
+                            w-4 h-4
+                            min-[320px]:w-5 min-[320px]:h-5
+                            min-[450px]:w-6 min-[450px]:h-6
+                            min-[1100px]:w-7 min-[1100px]:h-7;
+                }
+
+                .mini-navbar-share-button {
+                    @apply mini-navbar-button
+                            w-3 h-3
+                            min-[320px]:w-4 min-[320px]:h-4
+                            min-[450px]:w-5 min-[450px]:h-5 
+                            min-[1100px]:w-6 min-[1100px]:h-6;
+                }
+
+
+                /* PROFILE PAGE */
+                .profile-page-layout {
+                    @apply relative fixed overflow-hidden
+                            flex items-center 
+                            flex-col 
+                            w-full
+                            min-[800px]:w-[80%] space-y-8
+                            min-[1200px]:flex-row min-[1200px]:w-[90%] 
+                            min-[1200px]:space-x-8 min-[1200px]:space-y-0
+                            xl:w-[80%]
+                            min-[1200px]:h-[calc(100vh-160px)]
+                            smooth duration-500;
+                }
+
+                .profile-header {
+                    @apply relative flex flex-col items-center 
+                            min-[600px]:justify-center 
+                            w-full
+                            space-y-2 
+                            min-[480px]:space-y-6
+                            min-[1200px]:w-[50%] h-full 
+                            min-[280px]:px-[10px] min-[320px]:px-[20px] min-[400px]:px-[30px];
+                }
+
+                .profile-banner {
+                    @apply z-[-1] rounded-2xl mesh-gradient overflow-hidden
+                            absolute top-0 left-0 w-full 
+                            h-[140px]
+                            min-[480px]:h-[180px]
+                            min-[600px]:h-[200px] 
+                            min-[1200px]:h-[35%];
+                }
+
+                .profile-page-picture-count-container {
+                    @apply flex w-full items-center
+                            pt-[80px]
+                            min-[480px]:pt-[100px]
+                            min-[600px]:pt-[80px]
+                            min-[1200px]:pt-0
+                            flex-col space-y-2
+                            min-[280px]:flex-row min-[280px]:justify-between min-[280px]:space-y-0;
+                }
+
+                .profile-page-picture-container {
+                    @apply flex justify-center items-center rounded-full aspect-square bg-[var(--black)] overflow-hidden
+                            w-[80px] h-[80px]
+                            min-[480px]:w-[100px] min-[480px]:h-[100px]
+                            min-[600px]:w-[150px] min-[600px]:h-[150px];
+                }
+
+                .profile-page-picture-missing {
+                    @apply uppercase 
+                            text-xl
+                            min-[480px]:text-3xl
+                            min-[600px]:text-5xl;
+                }
+
+                .profile-page-picture-missing-initial {
+                    @apply text-fade glow font-[900];
+                }
+
+                .profile-names-container {
+                    @apply flex flex-col items-start space-y-0;
+                }
+
+                .profile-name {
+                    @apply flex items-center space-x-2 font-[900]
+                            text-3xl min-[480px]:text-4xl;
+                }
+
+                .profile-verified-icon {
+                    @apply mt-2 text-[var(--blue)]
+                            w-8 h-8
+                            min-[480px]:w-9 min-[480px]:h-9;
+                }
+
+                .profile-username {
+                    @apply text-[#121212]/50 
+                            text-xl min-[480px]:text-[22px];
+                }
+
+                .profile-bio {
+                    @apply min-[480px]:text-lg 
+                            line-clamp-3 text-left;
+                }
+
+                .profile-count-container {
+                    @apply flex items-center bg-[#121212]/70 backdrop-blur-[2px] 
+                            rounded-full min-[280px]:rounded-3xl min-[340px]:rounded-full
+                            w-full justify-center space-x-2 py-2 
+                            min-[200px]:w-auto min-[200px]:justify-start  
+                            min-[200px]:space-x-4 min-[200px]:px-6 
+                            min-[280px]:space-x-2 min-[280px]:px-4 min-[280px]:py-[7px] 
+                            min-[340px]:space-x-3 min-[340px]:px-5 min-[340px]:py-2
+                            min-[400px]:space-x-5 min-[400px]:px-6 min-[400px]:py-3
+                            min-[480px]:space-x-8 min-[480px]:px-8 min-[480px]:py-4
+                            min-[600px]:space-x-12 min-[600px]:px-10;
+                }
+
+                .profile-count-item {
+                    @apply flex flex-col space-y-0 items-center text-fade cursor-pointer glow 
+                            smooth hover:[filter:drop-shadow(0_0_5px_rgba(255,255,255,1))];
+                }
+
+                .profile-count-number {
+                    @apply text-base
+                            min-[340px]:text-lg
+                            min-[400px]:text-xl
+                            min-[480px]:text-2xl 
+                            min-[600px]:text-3xl 
+                            font-[900];
+                }
                 
+                .profile-count-title {
+                    @apply text-[8px]
+                            min-[340px]:text-[10px]
+                            min-[400px]:text-xs
+                            min-[480px]:text-sm 
+                            min-[600px]:text-base tracking-normal;
+                }
+
+                .profile-not-followed-button {
+                    @apply w-full p-2 rounded-lg bg-transparent border border-[var(--black)] 
+                            flex items-center justify-center 
+                            text-sm min-[480px]:text-base
+                            smooth hover:bg-[#121212]/[0.85] hover:text-[var(--white)];
+                }
+
+                .profile-followed-button {
+                    @apply profile-not-followed-button bg-[var(--black)] text-[var(--white)];
+                }
+
+                .profile-recipes-container {
+                    @apply w-full
+                            min-[280px]:px-2 min-[400px]:px-8 
+                            min-[1200px]:w-[50%] 
+                            min-[1200px]:py-6 min-[1200px]:px-10
+                            h-full rounded-xl;
+                }
+
+                .profile-recipes-title {
+                    @apply uppercase tracking-widest 
+                            text-2xl
+                            min-[480px]:text-3xl mb-2;
+                }
+
+                .profile-recipes-border {
+                    @apply mb-0 border-b border-[var(--black)];
+                }
+
+                .profile-recipes-carousel {
+                    @apply overflow-x-hidden overflow-y-auto w-full h-full space-y-3 pb-[50px];
+                }
+
+                .modal-profile-picture-missing-text {
+                    @apply profile-picture-missing-text;
+                }
+
+                .modal-profile-picture-missing-container {
+                    @apply profile-picture-missing-container;
+                }
+
+                .modal-profile-picture-container {
+                    @apply profile-picture-container 
+                            w-[30px] h-[30px]
+                            min-[320px]:w-[40px] min-[320px]:h-[40px];
+                }
+
+                .modal-username {
+                    @apply font-[500] link flex items-center space-x-1
+                            text-base min-[320px]:text-xl;
+                }
+
+                .modal-main-info {
+                    @apply flex items-center space-x-3;
+                }
+
+                .modal-not-followed-button {
+                    @apply profile-not-followed-button 
+                            text-sm min-[320px]:text-base 
+                            w-fit rounded-full px-[8px] py-[4px]
+                            min-[320px]:px-[14px] min-[320px]:py-2
+                            min-[480px]:px-2 
+                            min-[480px]:w-full min-[480px]:rounded-lg
+                            min-[480px]:max-w-[100px];
+                }
+
+                .modal-followed-button {
+                    @apply modal-not-followed-button bg-[var(--black)] text-[var(--white)];
+                }
+
+                .modal-user-box {
+                    @apply flex items-center justify-between w-full;
+                }
+
+                .modal-user-view {
+                    @apply modal 
+                            overflow-hidden
+                            w-[500px]
+                            h-[300px];
+                }
+
+
+                /* MODAL */
+                .modal {
+                    @apply fixed top-[50%] left-[50%] [transform:translate(-50%,-50%)] rounded-xl bg-[var(--white)] z-[10001] smooth
+                            px-8 py-5 max-w-[90%] w-[600px]
+                            flex flex-col space-y-4
+                            text-base min-[320px]:text-lg min-[360px]:text-xl min-[450px]:text-2xl 
+                            font-[500];
+                }
+
+                .blackout {
+                    @apply h-screen w-screen fixed left-0 top-0 bg-[#121212]/80 z-[10000] smooth;
+                }
+
+                
+                /* SAVED RECIPES */
+                .saved-recipes-main {
+                    @apply w-full 
+                            min-[800px]:px-[25px]
+                            min-[900px]:px-[50px]
+                            min-[1000px]:px-[100px]
+                            min-[1100px]:px-[150px]
+                            min-[1200px]:px-[200px] 
+                            overflow-hidden 
+                            smooth duration-500;
+                }
+
+                .saved-recipes-carousel-none {
+                    @apply h-[calc((100vh-160px)*0.9)] flex flex-col space-y-1 justify-center items-center text-xl font-[500];
+                }
+
+                .saved-recipes-carousel {
+                    @apply grid overflow-y-scroll h-full smooth duration-500 gap-4 overflow-hidden
+                            min-[900px]:grid-cols-2 
+                            min-[600px]:grid-cols-2
+                            grid-cols-1;
+                }
+
+
+                /* FEED */
+                .feed-main {
+                    @apply w-full overflow-hidden
+                            smooth duration-500;
+                }
+
+                .feed-recipes-carousel-none {
+                    @apply flex flex-col space-y-1 justify-center items-center text-xl font-[500]
+                            h-[calc((100vh-160px)*0.9)];
+                }
+
+                .feed-recipes-carousel {
+                    @apply overflow-y-scroll h-full overflow-hidden
+                            smooth duration-500 
+                            pt-[20px] pb-[50px]
+                            min-[600px]:px-[25px]
+                            min-[700px]:px-[50px]
+                            min-[800px]:px-[100px]
+                            min-[900px]:px-[150px]
+                            min-[1000px]:px-[200px]
+                            min-[1100px]:px-[250px]
+                            min-[1200px]:px-[300px] 
+                            flex flex-col space-y-16 items-center
+                }
+
+                .feed-profile-picture-container {
+                    @apply flex items-center justify-center overflow-hidden rounded-full aspect-square bg-[var(--black)]
+                            w-[30px] h-[30px]
+                            min-[370px]:w-[40px] min-[370px]:h-[40px]
+                            min-[450px]:w-[50px] min-[450px]:h-[50px];
+                }
+
+                .feed-username {
+                    @apply font-[500] link
+                            text-xl
+                            min-[370px]:text-2xl
+                            min-[450px]:text-3xl 
+                            mb-3;
+                }
+
+                .feed-profile-initial {
+                    @apply uppercase text-fade font-[900]
+                            text-[10px] min-[370px]:text-sm min-[450px]:text-base;
+                }
+
+                .feed-tag-text {
+                    @apply uppercase text-fade tracking-widest font-[900]
+                            text-[7px]
+                            min-[380px]:text-[8px]
+                            min-[450px]:text-[8px]
+                            min-[500px]:text-[10px] 
+                            min-[600px]:text-xs;
+                }
+
+                .feed-tag-item {
+                    @apply py-2 px-3 w-fit
+                            min-[380px]:py-2 min-[380px]:px-5 
+                            flex items-center justify-center 
+                            rounded-full bg-[var(--black)];
+                }
+
+                .feed-tags-container {
+                    @apply absolute top-[10px] left-[10px] 
+                            hidden min-[320px]:flex
+                            flex-col space-y-1
+                            min-[450px]:space-x-3 min-[450px]:space-y-0
+                            min-[450px]:flex-row min-[450px]:items-center;
+                }
+
+                .feed-image-container {
+                    @apply rounded-xl overflow-hidden w-full relative
+                            h-[130px]
+                            min-[320px]:h-[160px]
+                            min-[370px]:h-[200px]
+                            min-[450px]:h-[250px]
+                            min-[500px]:h-[300px];
+                }
+
+                .feed-poster-container {
+                    @apply flex space-x-3 items-center;
+                }
+
+                .feed-name {
+                    @apply text-left font-[900]
+                            text-xl
+                            min-[370px]:text-2xl
+                            min-[450px]:text-3xl;
+                }
+
+                .feed-description {
+                    @apply text-left 
+                            text-sm
+                            min-[370px]:text-base
+                            min-[450px]:text-lg;
+                }
+
+                .feed-timestamp {
+                    @apply text-xs
+                            min-[370px]:text-sm
+                            min-[450px]:text-base 
+                            text-[#121212]/50 font-bold;
+                }
+
+                .feed-icon-button {
+                    @apply w-5 h-5 smooth hover:scale-[1.2] hover:rotate-[5deg];
+                }
+
+                .feed-icon-item {
+                    @apply flex items-center space-x-1;
+                }
+
+                .feed-icons-container {
+                    @apply flex items-center space-x-3;
+                }
+
+                .feed-footer-container {
+                    @apply w-full flex justify-between items-center;
+                }
+
+                .feed-recipe-container {
+                    @apply flex flex-col space-y-2 w-full smooth min-[600px]:hover:scale-[1.05];
+                }
+
+
+                /* EDIT PROFILE */
+                .edit-main {
+                    @apply w-full 
+                            min-[800px]:px-[25px]
+                            min-[900px]:px-[50px]
+                            min-[1000px]:px-[100px]
+                            min-[1100px]:px-[150px]
+                            min-[1250px]:px-[200px] 
+                            smooth duration-500;
+                }
+
+                .edit-heading {
+                    @apply heading font-[500] mb-6;
+                }
+
+                .edit-form {
+                    @apply relative flex flex-col items-center justify-center overflow-y-auto
+                            space-y-8 min-[500px]:space-y-6;
+                }
+
+                .edit-banner-container {
+                    @apply relative rounded-2xl overflow-hidden
+                            w-full 
+                            h-[130px]
+                            min-[320px]:h-[150px]
+                            min-[400px]:h-[180px]
+                            min-[500px]:h-[200px];
+                }
+
+                .edit-banner-default {
+                    @apply absolute w-full h-full mesh-gradient opacity-[0.6] z-[-1];
+                }
+
+                .edit-icon-banner-container {
+                    @apply absolute top-[20px] right-[20px] overflow-hidden rounded-full aspect-square z-[99]
+                            bg-[var(--white)] backdrop-blur-md opacity-70 smooth hover:opacity-100 cursor-pointer
+                            flex items-center justify-center
+                            w-[20px] h-[20px]
+                            min-[320px]:w-[30px] min-[320px]:h-[30px];
+                }
+
+                .edit-icon {
+                    @apply w-3 h-3
+                            min-[320px]:w-4 min-[320px]:h-4 
+                            text-[var(--black)];
+                }
+
+                .edit-icon-picture-container {
+                    @apply edit-icon-banner-container 
+                            top-[25px] min-[320px]:top-[40px] 
+                            right-[31%]
+                            min-[300px]:right-[33%]
+                            min-[350px]:right-[35%]
+                            min-[400px]:right-[37%]
+                            min-[450px]:right-[39%]
+                            min-[530px]:right-[41%]
+                            min-[650px]:right-[43%]
+                            min-[900px]:right-[45%];
+                }
+
+                .edit-picture-container {
+                    @apply flex justify-center items-center rounded-full aspect-square bg-[var(--black)] overflow-hidden
+                            w-[90px] h-[90px]
+                            min-[320px]:w-[110px] min-[320px]:h-[110px]
+                            min-[400px]:w-[130px] min-[400px]:h-[130px]
+                            min-[500px]:w-[150px] min-[500px]:h-[150px]
+                            absolute absolute-center-x 
+                            top-[25px]
+                            min-[320px]:top-[40px];
+                }
+
+                .edit-picture-missing {
+                    @apply uppercase text-fade glow font-[900]
+                            text-2xl
+                            min-[320px]:text-3xl
+                            min-[400px]:text-4xl
+                            min-[500px]:text-5xl;
+                }
+
+                .edit-text-fields {
+                    @apply w-full 
+                            min-[600px]:px-[25px] 
+                            min-[700px]:px-[50px] 
+                            min-[800px]:px-[75px] 
+                            min-[900px]:px-[100px] 
+                            space-y-6;
+                }
+
+                .edit-names-container {
+                    @apply w-full flex 
+                            flex-col space-y-6
+                            min-[400px]:flex-row min-[400px]:space-x-6 min-[400px]:space-y-0;
+                }
+
+                .edit-label {
+                    @apply text-lg font-[500];
+                }
+
+                .edit-input-container {
+                    @apply w-full space-y-2;
+                }
+
+                .edit-text-counter {
+                    @apply absolute backdrop-blur-lg rounded-full font-[900] text-[#121212]/50
+                            bottom-[15px] right-[15px] 
+                            text-xs;
+                }
+
+                .edit-bio-container {
+                    @apply edit-input-container relative;
+                }
             }
 
         </style>
@@ -198,13 +1120,13 @@
                     Explore
                 </a>
                 {% if user.is_authenticated %}
-                    <a class="nav-item">
+                    <a href="{% url 'feed' %}" class="nav-item">
                         My Feed
                     </a>
                     <a href="{% url 'create_recipe' %}" class="nav-item">
                         Create Recipe
                     </a>
-                    <a class="nav-item">
+                    <a href="{% url 'saved_recipes' %}" class="nav-item">
                         Saved Recipes
                     </a>
                     <div class="relative">
@@ -213,7 +1135,7 @@
                                 <img 
                                     src="{{ user.profile_picture.url }}" 
                                     alt="{{ user.username }} Profile Picture"
-                                    class="object-cover"    
+                                    class="object-cover h-full w-full"    
                                 >
                             {% else %}
                                 <div class="flex items-center justify-center group w-full h-full">
@@ -223,7 +1145,7 @@
                         </div>
                         <div id="profilePictureDropdown" class="h-0 opacity-0 smooth duration-1000 rounded-xl w-[85px] bg-[var(--black)] absolute top-[55px] -right-[15px] space-y-2 p-3">
                             <div class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden">
-                                <a href="{% url 'index' %}">Profile</a>
+                                <a href="{% url 'profile' user.username %}">Profile</a>
                             </div>
                             <hr class="border-[#ececec]/50 glow">
                             <div class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden">
@@ -261,44 +1183,44 @@
             <!-- Sidebar items -->
             <div class="flex flex-col space-y-3 items-center sm:items-end opacity-0">
                 {% if user.is_authenticated %}
-                    <div id="profilePicture" class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] border border-[#ececec]/50 overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth">
+                    <a href="{% url 'profile' user.username %}" id="profilePicture" class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] border border-[#ececec]/50 overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth">
                         {% if user.profile_picture %}
                             <img 
                                 src="{{ user.profile_picture.url }}" 
                                 alt="{{ user.username }} Profile Picture"
-                                class="object-cover"    
+                                class="object-cover w-full h-full"    
                             >
                         {% else %}
                             <div class="flex items-center justify-center group w-full h-full">
                                 <div class="text-fade font-[900] group-hover:glow smooth">{{ user.username|capfirst|slice:"1" }}</div>
                             </div>
                         {% endif %}
-                    </div>
+                    </a>
                 {% endif %}
-                <a class="sidebar-item" href="{% url 'index' %}">
+                <a href="{% url 'index' %}" class="sidebar-item" >
                     Home
                 </a>
-                <a class="sidebar-item" href="{% url 'explore' %}">
+                <a href="{% url 'explore' %}" class="sidebar-item" >
                     Explore
                 </a>
                 {% if user.is_authenticated %}
-                    <a class="sidebar-item">
+                    <a href="{% url 'feed' %}" class="sidebar-item">
                         My Feed
                     </a>    
                     <a href="{% url 'create_recipe' %}" class="sidebar-item">
                         Create Recipe
                     </a>
-                    <a class="sidebar-item">
+                    <a href="{% url 'saved_recipes' %}" class="sidebar-item">
                         Saved Recipes
                     </a>
-                    <a class="sidebar-item" href="{% url 'logout' %}">
+                    <a href="{% url 'logout' %}" class="sidebar-item">
                         Log Out
                     </a>
                 {% else %}
-                    <a class="sidebar-item" href="{% url 'login' %}">
+                    <a href="{% url 'login' %}" class="sidebar-item">
                         Login
                     </a>
-                    <a class="sidebar-item" href="{% url 'register' %}">
+                    <a href="{% url 'register' %}" class="sidebar-item">
                         Register
                     </a>
                 {% endif %}

@@ -4,7 +4,7 @@
 
 {% block body %}
         
-    <div class="flex flex-col space-y-2 min-[1100px]:flex-row min-[1100px]:space-x-8 min-[1100px]:space-y-0">
+    <div id="mainLayout" class="flex flex-col space-y-2 min-[1100px]:flex-row min-[1100px]:space-x-8 min-[1100px]:space-y-0 smooth duration-500 opacity-0">
 
         <!-- Header Image -->
         <div class="relative w-full min-[1100px]:w-[50%] min-[1100px]:h-[calc(100vh-150px)] flex">
@@ -13,7 +13,7 @@
                 src="{% static 'recipeninja/ninja-cooking.png' %}" 
                 alt="RecipeNinja Cooking"
                 class="w-full rounded-2xl object-cover mb-5 brightness-[0.8]
-                        h-[150px] min-[340px]:h-[320px] min-[390px]:h-[350px] min-[450px]:h-[400px] min-[1100px]:h-full"
+                        h-[150px] min-[340px]:h-[320px] min-[390px]:h-[350px] min-[450px]:h-[400px] min-[1100px]:h-full bg-[var(--black)]"
             >
     
             <!-- Text -->
@@ -70,29 +70,32 @@
         </div>
     
         <!-- Cuisines -->
-        <div 
-            class="flex flex-col space-y-3 min-[450px]:space-y-8 justify-center items-center 
-                    min-[1100px]:h-[calc(100vh-150px)] min-[1100px]:w-[50%] min-[1100px]:overflow-x-hidden min-[1100px]:overflow-y-auto "
-        >
-            <div class="heading font-[500] text-2xl min-[450px]:text-3xl min-[540px]:text-4xl text-center">
-                What do you like?
-            </div>
-            <div id="cuisineCarousel" class="grid grid-cols-2 min-[340px]:grid-cols-3 gap-x-4 sm:gap-x-12 md:gap-x-20 min-[1100px]:gap-x-6 min-[1200px]:gap-x-12 gap-y-4">
-                {% for cuisine in cuisines  %}
-                    <a 
-                        href="{% url 'explore' %}?cuisine={{ cuisine.name }}"
-                        class="relative aspect-square rounded-full bg-[var(--black)]
-                                flex items-center justify-center overflow-hidden group cursor-pointer smooth hover:rotate-[20deg]
-                                w-[90px] h-[90px] min-[450px]:w-[120px] min-[450px]:h-[120px] min-[540px]:w-[150px] min-[540px]:h-[150px]"
-                    >
-                        <img 
-                            src="{{ cuisine.cover.url }}" 
-                            alt="{{ cuisine.name }} Cover" 
-                            class="w-full h-full brightness-50 smooth group-hover:brightness-[0.8] object-cover"
+        <div class="w-full min-[1100px]:h-[calc(100vh-150px)] min-[1100px]:w-[50%] overflow-hidden">
+            <div 
+                class="flex flex-col space-y-3 min-[450px]:space-y-8 items-center h-full
+                        min-[1100px]:overflow-x-hidden min-[1100px]:overflow-y-auto min-[1100px]:w-[48vw]"
+            >
+                <div class="heading font-[500] text-2xl min-[450px]:text-3xl min-[540px]:text-4xl text-center">
+                    What do you like?
+                </div>
+                <div id="cuisineCarousel" class="grid grid-cols-2 min-[340px]:grid-cols-3 gap-x-4 sm:gap-x-12 md:gap-x-20 min-[1100px]:gap-x-6 min-[1200px]:gap-x-12 gap-y-4">
+                    {% for cuisine in cuisines  %}
+                        <a 
+                            href="{% url 'explore' %}?cuisine={{ cuisine.name }}"
+                            class="relative aspect-square rounded-full bg-[var(--black)]
+                                    flex items-center justify-center overflow-hidden group cursor-pointer smooth hover:rotate-[20deg]
+                                    w-[90px] h-[90px] min-[450px]:w-[120px] min-[450px]:h-[120px] min-[540px]:w-[150px] min-[540px]:h-[150px]"
                         >
-                        <div class="absolute font-[900] text-fade text-sm min-[450px]:text-lg glow smooth group-hover:text-[var(--white)] group-hover:scale-[1.4]">{{ cuisine.name }}</div>
-                    </a>
-                {% endfor %}
+                            <img 
+                                loading="lazy"
+                                src="{{ cuisine.cover.url }}" 
+                                alt="{{ cuisine.name }} Cover" 
+                                class="w-full h-full brightness-50 smooth group-hover:brightness-[0.8] object-cover"
+                            >
+                            <div class="absolute font-[900] text-fade text-sm min-[450px]:text-lg glow smooth group-hover:text-[var(--white)] group-hover:scale-[1.4]">{{ cuisine.name }}</div>
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
@@ -103,6 +106,6 @@
 
 {% block script %}
 
-    <script src="{% static 'recipeninja/scripts/index.js' %}"></script>
+    <script src="{% static 'recipeninja/scripts/index.js' %}?{% now 'U' %}"></script>
 
 {% endblock %}

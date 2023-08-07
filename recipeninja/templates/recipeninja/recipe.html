@@ -1,169 +1,344 @@
 {% extends "recipeninja/layout.html" %}
 {% load static %}
+{% load custom_filters %}
+
+
+{% block title %}{{ recipe.name }} - {% endblock %}
 
 
 {% block body %}
 
     {% if recipe %}
     
-        <div class="flex w-full space-x-8 h-[calc(100vh-160px)] overflow-hidden">
+        <div id="mainLayout" class="recipe-page-main opacity-0">
 
             <!-- Left -->
-            <div class="w-[60%] flex flex-col">
+            <div class="left-side">
                 <!-- Image -->
-                <div class="h-[calc((100vh-160px)/2)] overflow-hidden rounded-2xl mb-3">
-                    <img 
-                        src="{{ recipe.image.url }}" 
-                        alt=""
-                        class="w-full h-full object-cover"
-                    >
+                <div class="left-image-container">
+                    {% if recipe.image %}
+                        <img 
+                            src="{{ recipe.image.url }}" 
+                            class="left-image"
+                        >
+                    {% else %}
+                        <div class="w-full h-full bg-[#121212]/80 flex justify-center items-center font-bold text-[var(--white)]">
+                            No image provided.
+                        </div>
+                    {% endif %}
                 </div>
 
-                <!-- Recipe Name -->
-                <div id="name" class="text-6xl top-[30px] text-[var(--black)] font-[900] w-full line-clamp-2">
-                    {{ recipe.name }}
+                <div class="text-base mb-3">
+                    {% if recipe.cuisines.all|length > 0 %}
+                        <!-- Cuisines -->
+                        {% for cuisine in recipe.cuisines.all %}
+                            <a href="{% url 'explore' %}?cuisine={{ cuisine.name }}" class="uppercase tracking-[4px] link font-[500] text-xs min-[450px]:text-sm">
+                                {{ cuisine.name }}{% if not forloop.last %},{% endif %} 
+                            </a>
+                        {% endfor %}
+                    {% endif %}
+    
+                    <!-- Recipe Name -->
+                    <div id="name" class="left-recipe-name">
+                        {{ recipe.name }}
+                    </div>
                 </div>
 
-                <!-- Poster -->
-                <div class="text-2xl font-[400] mb-8">
-                    by <a href="" class="link font-bold">{{ recipe.poster }}</a>
+                <div class="left-poster-icons-container"> 
+                    <!-- Poster -->
+                    <div class="left-poster">
+                        <div>
+                            by
+                        </div>
+                        <a href="{% url 'profile' recipe.poster.username %}" class="left-poster-username">
+                            <div id="recipePosterUsername">{{ recipe.poster.username }}</div>
+                            {% if recipe.poster.is_staff %}
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="left-poster-checkmark">
+                                    <path fill-rule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                                </svg>                          
+                            {% endif %}
+                        </a>
+                    </div>
+    
+                    <!-- Icons -->
+                    <div class="left-icons-container">
+                        <!-- Like button -->
+                        <div id="likeRecipeButton" class="left-icon-item">
+                            <div id="recipeLikesCount">{{ recipe.likers.all.count }}</div>
+                            <div id="likeRecipeSvg">
+                                {% if user in recipe.likers.all %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="left-icon-button text-[var(--red)] smooth opacity-100">
+                                        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                                    </svg>
+                                {% else %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="left-icon-button">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                                    </svg>
+                                {% endif %}
+                            </div>
+                        </div>
+        
+                        <!-- Save button -->
+                        <div id="saveRecipeButton" class="left-icon-item">
+                            <div id="recipeSavesCount">{{ recipe.savers.all.count }}</div>
+                            <div id="saveRecipeSvg">
+                                {% if user in recipe.savers.all %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="left-icon-button">
+                                        <path fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0111.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 01-1.085.67L12 18.089l-7.165 3.583A.75.75 0 013.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93z" clip-rule="evenodd" />
+                                    </svg>
+                                {% else %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="left-icon-button">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+                                    </svg>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if user.is_authenticated and recipe.poster == user %}
+                            <div id="deleteRecipeButton" class="left-icon-item">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="var(--red)" class="left-icon-button">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                </svg>
+                            </div>
+                        {% endif %}
+                   </div>
                 </div>
 
-                <div class="flex justify-between items-center">
+                <!-- Description -->
+                {% if recipe.description %}
+                    <div class="left-description">
+                        {{ recipe.description }}
+                    </div>
+                {% endif %}
+
+                <div class="left-details-nutrition-container">
                     <!-- Details -->
-                    <div class="w-full flex space-x-20 items-center">
+                    <div class="left-details-container">
                         <!-- Duration -->
-                        <div class="flex flex-col items-center">
-                            <div class="text-lg tracking-wider">
+                        <div class="left-details-item">
+                            <div class="left-details-title">
                                 COOK
                             </div>
-                            <div class="text-3xl font-[500]">
-                                {{ recipe.est_duration }} min
+                            <div class="left-details-content">
+                                {{ recipe.est_duration|format_time_filter }}
                             </div>
                         </div>
     
                         <!-- Difficulty -->
-                        <div class="flex flex-col items-center">
-                            <div class="text-lg tracking-wider">
+                        <div class="left-details-item">
+                            <div class="left-details-title">
                                 DIFFICULTY
                             </div>
-                            <div class="text-3xl font-[500]">
+                            <div class="left-details-content">
                                 {{ recipe.difficulty }}
                             </div>
                         </div>
                     </div>
 
                     <!-- Nutrition -->
-                    <div class="flex space-x-8 px-8 py-2 border border-[var(--black)] rounded-xl">
+                    <div class="left-nutrition-container">
                         <!-- Calories -->
-                        <div class="flex flex-col justify-center items-center">
-                            <div class="text-4xl font-[500]">
+                        <div class="left-nutrition-item">
+                            <div class="left-nutrition-content">
                                 {% if calories %}
                                     {{ calories }}
                                 {% else %}
                                     -
                                 {% endif %}
                             </div>
-                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                            <div class="left-nutrition-title">
                                 CALS
                             </div>
                         </div>
 
                         <!-- Carbs -->
-                        <div class="flex flex-col justify-center items-center">
-                            <div class="text-4xl font-[500]">
+                        <div class="left-nutrition-item"> 
+                            <div class="left-nutrition-content">
                                 {% if recipe.est_carbs %}
-                                    {{ recipe.est_carbs }}
+                                    {{ recipe.est_carbs }}<span class="text-xs ml-[1px]">G</span>
                                 {% else %}
                                     -
                                 {% endif %}
                             </div>
-                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                            <div class="left-nutrition-title">
                                 CARB
                             </div>
                         </div>
 
                         <!-- Protein -->
-                        <div class="flex flex-col justify-center items-center">
-                            <div class="text-4xl font-[500]">
+                        <div class="left-nutrition-item">
+                            <div class="left-nutrition-content">
                                 {% if recipe.est_protein %}
-                                    {{ recipe.est_protein }}
+                                    {{ recipe.est_protein }}<span class="text-xs ml-[1px]">G</span>
                                 {% else %}
                                     -
                                 {% endif %}
                             </div>
-                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                            <div class="left-nutrition-title">
                                 PROT
                             </div>
                         </div>
 
                         <!-- Fat -->
-                        <div class="flex flex-col justify-center items-center">
-                            <div class="text-4xl font-[500]">
+                        <div class="left-nutrition-item">
+                            <div class="left-nutrition-content">
                                 {% if recipe.est_fat %}
-                                    {{ recipe.est_fat }}
+                                    {{ recipe.est_fat }}<span class="text-xs ml-[1px]">G</span>
                                 {% else %}
                                     -
                                 {% endif %}
                             </div>
-                            <div class="mt-1 text-xs tracking-wider  font-[500]">
+                            <div class="left-nutrition-title">
                                 FAT
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Icons -->
             </div>
 
             <!-- Right -->
-            <div class="relative w-[40%] h-full bg-[#121212]/10 rounded-xl p-5 overflow-hidden">
-                <!-- Section -->
-                <div class="z-[-1] w-full h-full flex flex-col space-y-8 px-5 py-3">
-
-                    <!-- Title -->
-                    <div id="sectionTitle" class="text-5xl font-[500] uppercase tracking-widest">
-                        Ingredients
-                    </div>
-
-                    <!-- Content -->
-                    <div id="sectionContent" class="h-full overflow-y-auto text-2xl">
-                        <div class="mb-3">
-                            There are {{ recipe.ingredients|length }} ingredients in this recipe.
-                        </div>
-                        <ul class="font-[500] pl-8 list-disc list-inside marker:link">
-                            {% for ingredient in recipe.ingredients  %}
-                                <li>{{ ingredient }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                </div>
+            <div id="rightSide" class="right-side">
 
                 <!-- Mini navbar -->
-                <div class="z-[1] absolute w-full h-[80px] bottom-0 left-0 bg-gradient-to-t from-[#c2c2c2] from-70% p-5 flex items-center justify-center">
-                    <div class="w-full h-[50px] bg-[var(--black)] rounded-full flex items-center px-20 justify-between">
-                        <!-- Ingredient s-->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer text-[var(--white)]">
+                <div id="miniNavbarContainer" class="mini-navbar-container">
+                    <div id="miniNavbar" class="mini-navbar">
+                        <!-- Ingredients-->
+                        <svg id="ingredientsButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mini-navbar-button">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
                         </svg>
     
                         <!-- Instructions -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer text-[var(--white)]">
+                        <svg id="instructionsButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mini-navbar-button">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
                         </svg>
     
                         <!-- Reviews -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer text-[var(--white)]">
+                        <svg id="reviewsButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mini-navbar-button">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
                         </svg>                      
     
                         <!-- Share -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor-pointer text-[var(--white)]">
+                        <svg id="shareButton" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mini-navbar-share-button">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
                         </svg>
                     </div>
                 </div>
+
+                <!-- Ingredients -->
+                <div id="ingredientsSection" class="right-section">
+                    <!-- Title -->
+                    <div id="ingredientsTitle" class="right-section-title">
+                        Ingredients
+                    </div>
+
+                    <!-- Content -->
+                    <div id="ingredientsContent" class="right-ingredients-content-container">
+                        <div class="mb-5">
+                            This recipe yields 
+                            <span class="font-bold">{% if recipe.servings == 1 %}1 serving{% else %}{{ recipe.servings }} servings{% endif %}</span>
+                            and requires these
+                            <span class="font-bold">{{ recipe.ingredients|length }} ingredients</span>:
+                        </div>
+                        <ul class="right-ingredients-list">
+                            {% for ingredient in recipe.ingredients  %}
+                                <li class="-indent-[30px] pl-[20px]">{{ ingredient }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Instructions -->
+                <div id="instructionsSection" class="right-section hidden">
+                    <!-- Title -->
+                    <div id="instructionsTitle" class="right-section-title">
+                        Instructions
+                    </div>
+
+                    <!-- Content -->
+                    <div id="instructionsContent" class="right-instructions-content-container">
+                        {% for instruction in recipe.instructions %}
+                            <div class="right-instruction-item">
+                                <div class="right-instruction-step">
+                                    Step {{ forloop.counter }}
+                                </div>
+                                <div>
+                                    {{ instruction }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Reviews -->
+                <div id="reviewsSection" class="right-section hidden">
+                    <!-- Title -->
+                    <div id="reviewsTitle" class="right-section-title">
+                        Reviews
+                    </div>
+
+                    <!-- Content -->
+                    <div id="reviewsContent" class="right-reviews-content-container">
+                        <!-- Review box -->
+                        {% if user.is_authenticated %}
+                            <div class="right-review-container">
+                                <a href="{% url 'profile' user.username %}" class="profile-picture-container group">
+                                    {% if user.profile_picture %}
+                                        <img 
+                                            src="{{ user.profile_picture.url }}" 
+                                            alt="{{ user.username }} Profile Picture"
+                                            class="object-cover w-full h-full"    
+                                        >
+                                    {% else %}
+                                        <div class="profile-picture-missing-container">
+                                            <div class="profile-picture-missing-text">{{ user.username|capfirst|slice:"1" }}</div>
+                                        </div>
+                                    {% endif %}
+                                </a>
+                                <div class="w-full">
+                                    <textarea name="review" id="reviewInput" cols="30" rows="10" class="right-review-input" placeholder="What do you think of the recipe?"></textarea>
+                                    <button id="postReviewButton" class="button py-1">Post</button>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="right-review-unauth-input">
+                                <div>
+                                    <a href="{% url 'login' %}?next={{ request.path }}" class="link">Login</a> or <a href="{% url 'register' %}?next={{ request.path }}" class="link">register</a> to write a review.
+                                </div>
+                            </div>
+                        {% endif %}
+                                    
+                        <!-- Reviews carousel -->
+                        <div id="reviewsCarousel" class="right-reviews-carousel">
+                            <div class="right-review-none">No comments yet.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share -->
+                <div id="shareSection" class="right-section hidden">
+                    <!-- Title -->
+                    <div id="shareTitle" class="right-section-title">
+                        Share
+                    </div>
+
+                    <!-- Content -->
+                    <div id="shareContent" class="right-share-content-container">
+                        <div>
+                            Like this recipe? Share it with your friends!
+                        </div>
+                        <div id="shareBox" class="right-share-copy-box">
+                            <div id="shareLink" class="right-share-copy-link">
+                                {{ request.build_absolute_uri }}
+                            </div>
+                            <div id="copyLinkButton" class="right-share-copy-button-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="right-share-copy-button">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
             
         </div>
@@ -171,8 +346,9 @@
 
     {% else %}
 
-        <div class="heading text-invalid">
-            Recipe does not exist.
+        <div class="w-full h-[calc(100vh-200px)] flex flex-col space-y-4 justify-center items-center">
+            <div class="font-[900] text-4xl">Recipe does not exist :(</div>
+            <a href="{% url 'explore' %}" class="link text-xl uppercase tracking-widest">Back to explore</a>
         </div>
 
     {% endif %}
@@ -183,6 +359,6 @@
 
 {% block script %}
 
-    <script src="{% static 'recipeninja/scripts/recipe.js' %}?{% now 'U' %}"></script>
+    <script src="{% static 'recipeninja/scripts/recipe.js' %}?{% now 'U' %}" type="module"></script>
 
 {% endblock %}
