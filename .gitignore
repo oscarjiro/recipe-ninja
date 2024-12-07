@@ -1,0 +1,52 @@
+# Python bytecode files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+*.env
+*.venv
+*.virtualenv
+*.tox
+*.coverage
+*.hypothesis/
+*.nox/
+*.coverage.*
+*.idea/
+
+# Environment variables and credentials
+.env
+*.env
+*.secrets
+*.json
+
+# VS Code settings
+.vscode/
+
+# IDE files
+.idea/
+*.iml
+
+# macOS specific files
+.DS_Store
+
+# Windows specific files
+Thumbs.db
+
+# Python virtual environment
+venv/
+env/
+
+# Database files
+# db.sqlite3
+# *.db
+
+# Static files
+# static/
+

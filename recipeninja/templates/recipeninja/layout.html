@@ -1,29 +1,37 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %}{% endblock %}Recipe Ninja</title>
-        <link rel="icon" type="image/png" href="{% static 'recipeninja/logo.svg' %}">
-        <link rel="stylesheet" href="{% static 'recipeninja/styles.css' %}?{% now 'U' %}">
-        <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+        <link
+            rel="icon"
+            type="image/png"
+            href="{% static 'recipeninja/logo.svg' %}"
+        />
+        <link
+            rel="stylesheet"
+            href="{% static 'recipeninja/styles.css' %}?{% now 'U' %}"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.7.0.js"
+            integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+            crossorigin="anonymous"
+        ></script>
         <script src="https://cdn.tailwindcss.com"></script>
         <script src="{% static 'recipeninja/scripts/navbar.js' %}?{% now 'U' %}"></script>
         {% block script %}{% endblock %}
         <style type="text/tailwindcss">
-
             :root {
                 --black: #161618;
                 --white: #ececec;
                 --red: #d0312d;
                 --blue: rgb(8, 160, 233);
             }
-            
-            
+
             @layer components {
                 /* GENERAL */
                 body {
@@ -44,7 +52,36 @@
 
                 .mesh-gradient {
                     background-color: rgb(253, 164, 175);
-                    background-image: radial-gradient(at 79% 77%, rgb(91, 33, 182) 0, transparent 26%), radial-gradient(at 35% 44%, rgb(30, 58, 138) 0, transparent 76%), radial-gradient(at 75% 14%, rgb(254, 249, 195) 0, transparent 70%), radial-gradient(at 72% 33%, rgb(64, 64, 64) 0, transparent 18%), radial-gradient(at 43% 23%, rgb(55, 48, 163) 0, transparent 31%), radial-gradient(at 84% 88%, rgb(157, 23, 77) 0, transparent 98%);
+                    background-image: radial-gradient(
+                            at 79% 77%,
+                            rgb(91, 33, 182) 0,
+                            transparent 26%
+                        ),
+                        radial-gradient(
+                            at 35% 44%,
+                            rgb(30, 58, 138) 0,
+                            transparent 76%
+                        ),
+                        radial-gradient(
+                            at 75% 14%,
+                            rgb(254, 249, 195) 0,
+                            transparent 70%
+                        ),
+                        radial-gradient(
+                            at 72% 33%,
+                            rgb(64, 64, 64) 0,
+                            transparent 18%
+                        ),
+                        radial-gradient(
+                            at 43% 23%,
+                            rgb(55, 48, 163) 0,
+                            transparent 31%
+                        ),
+                        radial-gradient(
+                            at 84% 88%,
+                            rgb(157, 23, 77) 0,
+                            transparent 98%
+                        );
                 }
 
                 .absolute-center {
@@ -58,7 +95,6 @@
                 .absolute-center-y {
                     @apply top-[50%] left-0 [transform:translateY(-50%)];
                 }
-
 
                 /* TEXT */
                 .logo {
@@ -77,7 +113,6 @@
                     @apply text-[var(--red)] font-[500] text-lg;
                 }
 
-
                 /* NAVBAR */
                 .navbar {
                     @apply fixed top-0 p-4 px-8 z-[99] flex items-center
@@ -88,9 +123,10 @@
                     @apply text-xl font-[500] smooth hover:opacity-70;
                 }
 
-
                 /* SIDEBAR */
-                #expandSidebarButton, #collapseSidebarButton1, #collapseSidebarButton2 {
+                #expandSidebarButton,
+                #collapseSidebarButton1,
+                #collapseSidebarButton2 {
                     @apply cursor-pointer;
                 }
 
@@ -114,7 +150,6 @@
                             min-[1100px]:hidden;
                 }
 
-
                 /* INPUT */
                 .input {
                     @apply w-full border border-[var(--black)] rounded-lg bg-transparent p-2 font-[500]
@@ -126,7 +161,6 @@
                     @apply w-full rounded-lg bg-[var(--black)] text-[var(--white)] p-2
                             smooth hover:bg-[#121212]/80;
                 }
-
 
                 /* EXPLORE */
                 .cuisine-filters-carousel {
@@ -145,7 +179,6 @@
                     @apply cuisine-filter-button-unselected bg-[var(--black)] text-[var(--white)] hover:bg-[#121212]/80;
                 }
 
-
                 /* CREATE RECIPE FORM */
                 .recipe-form-input {
                     @apply w-full bg-transparent p-2 border-b border-[var(--black)] focus:outline-none;
@@ -161,7 +194,7 @@
 
                 select[multiple] option:checked {
                     background-color: var(--black);
-                    color: var(--white); 
+                    color: var(--white);
                 }
 
                 .form-button-unselected {
@@ -172,7 +205,6 @@
                     @apply cuisine-filter-button-selected text-base max-[1010px]:w-full;
                 }
 
-
                 /* EXPLORE */
                 .recipe-carousel {
                     @apply order-3 grid overflow-y-scroll h-full smooth duration-500 gap-4 overflow-hidden
@@ -180,7 +212,6 @@
                             min-[600px]:grid-cols-2
                             grid-cols-1;
                 }
-
 
                 /* RECIPE BOX */
                 .recipe-container {
@@ -202,7 +233,7 @@
                 }
 
                 .recipe-tag-item {
-                    @apply bg-[#121212]/70 rounded-full py-1 px-3
+                    @apply bg-[#121212]/70 rounded-full py-1 px-3;
                 }
 
                 .recipe-tag-text {
@@ -233,7 +264,6 @@
                     @apply w-4 h-4 mt-[0.8px] ml-1 smooth hover:scale-[1.2] hover:rotate-[2deg] hover:brightness-[0.6];
                 }
 
-                
                 /* RECIPE PAGE */
                 .recipe-page-main {
                     @apply w-full smooth duration-500
@@ -242,7 +272,6 @@
                             min-[1230px]:px-[50px] 
                             min-[1500px]:px-[100px];
                 }
-
 
                 /* RECIPE PAGE: LEFT SIDE */
                 .left-side {
@@ -257,7 +286,7 @@
                 }
 
                 .left-image {
-                    @apply w-full h-full object-cover
+                    @apply w-full h-full object-cover;
                 }
 
                 .left-recipe-name {
@@ -392,7 +421,6 @@
                             min-[900px]:text-2xl 
                             min-[1150px]:text-3xl;
                 }
-
 
                 /* RECIPE PAGE: RIGHT SIDE */
                 .right-side {
@@ -582,14 +610,14 @@
                     @apply z-[1] w-full h-[80px] flex items-center justify-center
                             bg-none mb-3
                             min-[900px]:absolute min-[900px]:left-0 min-[900px]:bottom-0 min-[900px]:p-5 min-[900px]:mb-auto
-                            min-[900px]:bg-gradient-to-t min-[900px]:from-[#c2c2c2] min-[900px]:from-70%; 
+                            min-[900px]:bg-gradient-to-t min-[900px]:from-[#c2c2c2] min-[900px]:from-70%;
                 }
 
                 .mini-navbar {
                     @apply w-full 
                             h-[40px] min-[320px]:h-[45px] min-[450px]:h-[50px] 
                             bg-[var(--black)] rounded-full flex items-center justify-around
-                            px-4 min-[1100px]:px-10; 
+                            px-4 min-[1100px]:px-10;
                 }
 
                 .mini-navbar-button {
@@ -608,7 +636,6 @@
                             min-[450px]:w-5 min-[450px]:h-5 
                             min-[1100px]:w-6 min-[1100px]:h-6;
                 }
-
 
                 /* PROFILE PAGE */
                 .profile-page-layout {
@@ -722,7 +749,7 @@
                             min-[600px]:text-3xl 
                             font-[900];
                 }
-                
+
                 .profile-count-title {
                     @apply text-[8px]
                             min-[340px]:text-[10px]
@@ -812,7 +839,6 @@
                             h-[300px];
                 }
 
-
                 /* MODAL */
                 .modal {
                     @apply fixed top-[50%] left-[50%] [transform:translate(-50%,-50%)] rounded-xl bg-[var(--white)] z-[10001] smooth
@@ -826,7 +852,6 @@
                     @apply h-screen w-screen fixed left-0 top-0 bg-[#121212]/80 z-[10000] smooth;
                 }
 
-                
                 /* SAVED RECIPES */
                 .saved-recipes-main {
                     @apply w-full 
@@ -850,7 +875,6 @@
                             grid-cols-1;
                 }
 
-
                 /* FEED */
                 .feed-main {
                     @apply w-full overflow-hidden
@@ -873,7 +897,7 @@
                             min-[1000px]:px-[200px]
                             min-[1100px]:px-[250px]
                             min-[1200px]:px-[300px] 
-                            flex flex-col space-y-16 items-center
+                            flex flex-col space-y-16 items-center;
                 }
 
                 .feed-profile-picture-container {
@@ -973,7 +997,6 @@
                 .feed-recipe-container {
                     @apply flex flex-col space-y-2 w-full smooth min-[600px]:hover:scale-[1.05];
                 }
-
 
                 /* EDIT PROFILE */
                 .edit-main {
@@ -1087,11 +1110,9 @@
                     @apply edit-input-container relative;
                 }
             }
-
         </style>
     </head>
     <body>
-
         <!-- Background -->
         <div class="z-[-100] fixed top-0 w-screen h-screen bg-[var(--white)]">
             <!-- <div class="mesh-gradient w-full h-full"></div> -->
@@ -1100,74 +1121,96 @@
         <!-- Navbar -->
         <nav class="navbar" id="navbar">
             <!-- Logo -->
-            <a href="{% url 'index' %}" class="flex items-center space-x-3 hover:text-transparent hover:bg-gradient-to-br hover:from-[var(--black)] hover:from-50% hover:bg-clip-text hover:smooth">
-                <img 
-                    src="{% static 'recipeninja/logo.svg' %}" 
-                    alt="RecipeNinja Logo" 
+            <a
+                href="{% url 'index' %}"
+                class="flex items-center space-x-3 hover:text-transparent hover:bg-gradient-to-br hover:from-[var(--black)] hover:from-50% hover:bg-clip-text hover:smooth"
+            >
+                <img
+                    src="{% static 'recipeninja/logo.svg' %}"
+                    alt="RecipeNinja Logo"
                     class="w-[45px] h-[45px] aspect-square [-webkit-filter:invert(10%)]"
-                >
+                />
                 <div class="logo pb-[5px] hidden min-[375px]:block">
                     RecipeNinja
                 </div>
             </a>
-            
+
             <!-- Navbar items -->
             <div class="hidden min-[1100px]:flex space-x-12 items-center">
-                <a class="nav-item" href="{% url 'index' %}">
-                    Home
-                </a>
-                <a class="nav-item" href="{% url 'explore' %}">
-                    Explore
-                </a>
+                <a class="nav-item" href="{% url 'index' %}"> Home </a>
+                <a class="nav-item" href="{% url 'explore' %}"> Explore </a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'feed' %}" class="nav-item">
-                        My Feed
-                    </a>
-                    <a href="{% url 'create_recipe' %}" class="nav-item">
-                        Create Recipe
-                    </a>
-                    <a href="{% url 'saved_recipes' %}" class="nav-item">
-                        Saved Recipes
-                    </a>
-                    <div class="relative">
-                        <div id="profilePicture" class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth">
-                            {% if user.profile_picture %}
-                                <img 
-                                    src="{{ user.profile_picture.url }}" 
-                                    alt="{{ user.username }} Profile Picture"
-                                    class="object-cover h-full w-full"    
-                                >
-                            {% else %}
-                                <div class="flex items-center justify-center group w-full h-full">
-                                    <div class="text-fade font-[900] group-hover:glow smooth">{{ user.username|capfirst|slice:"1" }}</div>
-                                </div>
-                            {% endif %}
+                <a href="{% url 'feed' %}" class="nav-item"> My Feed </a>
+                <a href="{% url 'create_recipe' %}" class="nav-item">
+                    Create Recipe
+                </a>
+                <a href="{% url 'saved_recipes' %}" class="nav-item">
+                    Saved Recipes
+                </a>
+                <div class="relative">
+                    <div
+                        id="profilePicture"
+                        class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth"
+                    >
+                        {% if user.profile_picture %}
+                        <img
+                            src="{{ user.profile_picture.url }}"
+                            alt="{{ user.username }} Profile Picture"
+                            class="object-cover h-full w-full"
+                        />
+                        {% else %}
+                        <div
+                            class="flex items-center justify-center group w-full h-full"
+                        >
+                            <div
+                                class="text-fade font-[900] group-hover:glow smooth"
+                            >
+                                {{ user.username|capfirst|slice:"1" }}
+                            </div>
                         </div>
-                        <div id="profilePictureDropdown" class="h-0 opacity-0 smooth duration-1000 rounded-xl w-[85px] bg-[var(--black)] absolute top-[55px] -right-[15px] space-y-2 p-3">
-                            <div class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden">
-                                <a href="{% url 'profile' user.username %}">Profile</a>
-                            </div>
-                            <hr class="border-[#ececec]/50 glow">
-                            <div class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden">
-                                <a href="{% url 'logout' %}">Log Out</a>
-                            </div>
+                        {% endif %}
+                    </div>
+                    <div
+                        id="profilePictureDropdown"
+                        class="h-0 opacity-0 smooth duration-1000 rounded-xl w-[85px] bg-[var(--black)] absolute top-[55px] -right-[15px] space-y-2 p-3"
+                    >
+                        <div
+                            class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden"
+                        >
+                            <a href="{% url 'profile' user.username %}"
+                                >Profile</a
+                            >
+                        </div>
+                        <hr class="border-[#ececec]/50 glow" />
+                        <div
+                            class="text-fade cursor-pointer hover:glow smooth rounded-lg smooth duration-500 hidden"
+                        >
+                            <a href="{% url 'logout' %}">Log Out</a>
                         </div>
                     </div>
+                </div>
                 {% else %}
-                    <a class="nav-item" href="{% url 'login' %}">
-                        Login
-                    </a>
-                    <a class="nav-item" href="{% url 'register' %}">
-                        Register
-                    </a>
+                <a class="nav-item" href="{% url 'login' %}"> Login </a>
+                <a class="nav-item" href="{% url 'register' %}"> Register </a>
                 {% endif %}
             </div>
 
             <!-- Expand sidebar button -->
             <div class="min-[1100px]:hidden" id="expandSidebarButton">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
-                </svg>                                           
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25"
+                    />
+                </svg>
             </div>
         </nav>
 
@@ -1175,70 +1218,92 @@
         <div id="sidebarContent" class="sidebar-content">
             <!-- Close sidebar button 1 -->
             <div id="collapseSidebarButton1" class="opacity-0 hidden sm:block">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>                  
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
+                </svg>
             </div>
-            
+
             <!-- Sidebar items -->
-            <div class="flex flex-col space-y-3 items-center sm:items-end opacity-0">
+            <div
+                class="flex flex-col space-y-3 items-center sm:items-end opacity-0"
+            >
                 {% if user.is_authenticated %}
-                    <a href="{% url 'profile' user.username %}" id="profilePicture" class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] border border-[#ececec]/50 overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth">
-                        {% if user.profile_picture %}
-                            <img 
-                                src="{{ user.profile_picture.url }}" 
-                                alt="{{ user.username }} Profile Picture"
-                                class="object-cover w-full h-full"    
-                            >
-                        {% else %}
-                            <div class="flex items-center justify-center group w-full h-full">
-                                <div class="text-fade font-[900] group-hover:glow smooth">{{ user.username|capfirst|slice:"1" }}</div>
-                            </div>
-                        {% endif %}
-                    </a>
+                <a
+                    href="{% url 'profile' user.username %}"
+                    id="profilePicture"
+                    class="cursor-pointer aspect-square rounded-full w-[50px] h-[50px] bg-[var(--black)] border border-[#ececec]/50 overflow-hidden hover:shadow-[#121212]/30 hover:shadow-lg smooth"
+                >
+                    {% if user.profile_picture %}
+                    <img
+                        src="{{ user.profile_picture.url }}"
+                        alt="{{ user.username }} Profile Picture"
+                        class="object-cover w-full h-full"
+                    />
+                    {% else %}
+                    <div
+                        class="flex items-center justify-center group w-full h-full"
+                    >
+                        <div
+                            class="text-fade font-[900] group-hover:glow smooth"
+                        >
+                            {{ user.username|capfirst|slice:"1" }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </a>
                 {% endif %}
-                <a href="{% url 'index' %}" class="sidebar-item" >
-                    Home
-                </a>
-                <a href="{% url 'explore' %}" class="sidebar-item" >
-                    Explore
-                </a>
+                <a href="{% url 'index' %}" class="sidebar-item"> Home </a>
+                <a href="{% url 'explore' %}" class="sidebar-item"> Explore </a>
                 {% if user.is_authenticated %}
-                    <a href="{% url 'feed' %}" class="sidebar-item">
-                        My Feed
-                    </a>    
-                    <a href="{% url 'create_recipe' %}" class="sidebar-item">
-                        Create Recipe
-                    </a>
-                    <a href="{% url 'saved_recipes' %}" class="sidebar-item">
-                        Saved Recipes
-                    </a>
-                    <a href="{% url 'logout' %}" class="sidebar-item">
-                        Log Out
-                    </a>
+                <a href="{% url 'feed' %}" class="sidebar-item"> My Feed </a>
+                <a href="{% url 'create_recipe' %}" class="sidebar-item">
+                    Create Recipe
+                </a>
+                <a href="{% url 'saved_recipes' %}" class="sidebar-item">
+                    Saved Recipes
+                </a>
+                <a href="{% url 'logout' %}" class="sidebar-item"> Log Out </a>
                 {% else %}
-                    <a href="{% url 'login' %}" class="sidebar-item">
-                        Login
-                    </a>
-                    <a href="{% url 'register' %}" class="sidebar-item">
-                        Register
-                    </a>
+                <a href="{% url 'login' %}" class="sidebar-item"> Login </a>
+                <a href="{% url 'register' %}" class="sidebar-item">
+                    Register
+                </a>
                 {% endif %}
             </div>
 
             <!-- Close sidebar button 2 -->
             <div id="collapseSidebarButton2" class="opacity-0 sm:hidden">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>                  
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="3"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                    />
+                </svg>
             </div>
         </div>
 
         <!-- Body -->
         <main class="mt-[80px] p-4 px-8" id="content">
-            {% block body %}
-            {% endblock %}
+            {% block body %} {% endblock %}
         </main>
-
     </body>
 </html>
