@@ -1,4 +1,4 @@
-# RecipeNinja: CS50W Capstone
+# RecipeNinja
 
 
 ### **Video Demo:**  <https://youtu.be/DXMZCxlD4lI>
